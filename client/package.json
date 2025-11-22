@@ -10,7 +10,8 @@
     "start": "next start",
     "dev:all": "concurrently \"npm run dev\" \"npm run inngest:dev\"",
     "dev:mprocs": "mprocs",
-    "lint": "eslint"
+    "lint": "eslint",
+    "db:studio": "npx prisma studio"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^2.0.45",
