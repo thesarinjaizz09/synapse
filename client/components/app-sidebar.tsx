@@ -13,7 +13,8 @@ import {
   Settings2,
   SquareTerminal,
 } from "lucide-react"
-
+import appLogo from "@/public/alphafusion.png";
+import Image from "next/image";
 import { NavMain } from "@/components/nav-main"
 import { NavProjects } from "@/components/nav-projects"
 import { NavSecondary } from "@/components/nav-secondary"
@@ -27,6 +28,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
+import Link from "next/link";
 
 const data = {
   user: {
@@ -42,21 +44,21 @@ const data = {
       isActive: true,
       items: [
         {
-          title: "History",
+          title: "Dashboard",
+          url: "/boards",
+        },
+        {
+          title: "Workflows",
           url: "#",
         },
         {
-          title: "Starred",
-          url: "#",
-        },
-        {
-          title: "Settings",
+          title: "Executions",
           url: "#",
         },
       ],
     },
     {
-      title: "Models",
+      title: "Assistants",
       url: "#",
       icon: Bot,
       items: [
@@ -103,19 +105,15 @@ const data = {
       icon: Settings2,
       items: [
         {
-          title: "General",
-          url: "#",
-        },
-        {
           title: "Team",
           url: "#",
         },
         {
-          title: "Billing",
+          title: "General",
           url: "#",
         },
         {
-          title: "Limits",
+          title: "Credentials",
           url: "#",
         },
       ],
@@ -161,16 +159,21 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton size="lg" asChild>
-              <a href="#">
-                <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
-                  <Command className="size-4" />
+            <SidebarMenuButton size="lg" asChild className="p-2 h-auto">
+              <Link href="#" className="flex items-center justify-center shadow-inner border">
+                <Image
+                  src={appLogo}
+                  alt="AlphaFusion Corporation"
+                  width={32}
+                  className="p-2 border-none rounded-sm bg-primary"
+                />
+                <div className="grid flex-1 text-left leading-tight text-primary-foreground">
+                  <span className="truncate text-md text-primary-foreground">
+                    Alphafusion
+                  </span>
+                  <span className="truncate text-xs text-gray-400">Synapse</span>
                 </div>
-                <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium">Acme Inc</span>
-                  <span className="truncate text-xs">Enterprise</span>
-                </div>
-              </a>
+              </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
