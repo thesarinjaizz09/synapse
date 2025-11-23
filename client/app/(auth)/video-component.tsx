@@ -6,7 +6,7 @@ import Image from 'next/image'
 
 const VideoComponent = () => {
     return (
-        <div className="relative hidden lg:block overflow-hidden">
+        <div className="bg-muted relative hidden lg:block overflow-hidden">
             <video
                 src="/backgrounds/auth/auth.bg.mp4"
                 autoPlay
