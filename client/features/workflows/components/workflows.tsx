@@ -4,6 +4,8 @@ import { generateSlug } from "random-word-slugs";
 import { GlobalContainer, GlobalHeader, GlobalSearch } from "@/components/globals/global-views"
 import { useCreateWorkflow, useSuspenseWorkflows } from "../hooks/use-workflows"
 import { toast } from "sonner";
+import { useWorkflowParams } from "../hooks/use-workflow-params";
+import { useGlobalSearch } from "../hooks/use-global-search";
 
 export const WorkflowsTable = () => {
     const workflows = useSuspenseWorkflows()
@@ -35,8 +37,11 @@ export const WorkflowsHeader = ({ disabled }: { disabled?: boolean }) => {
 }
 
 export const WorkflowsSearch = () => {
+    const { params, setParams } = useWorkflowParams()
+    const { search, onSearchChange } = useGlobalSearch({ params, setParams })
+
     return (
-        <GlobalSearch placeholder="Search workflows..." onChange={() => { }} value={""} />
+        <GlobalSearch placeholder="Search workflows..." onChange={onSearchChange} value={search} />
     )
 }
 

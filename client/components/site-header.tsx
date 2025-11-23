@@ -50,8 +50,6 @@ export function SiteHeader() {
   const { toggleSidebar } = useSidebar();
   const breadcrumbs = useBreadcrumbs(SIDEBAR_MAIN_NAVIGATION);
 
-  console.log("Breadcrumbs:", breadcrumbs);
-
   return (
     <header className="bg-background sticky top-0 z-50 w-full border-b">
       <div className="flex h-(--header-height) items-center w-full">

@@ -5,13 +5,9 @@ import { useWorkflowParams } from "./use-workflow-params"
 
 export const useSuspenseWorkflows = () => {
     const trpc = useTRPC()
-    const { page, pageSize, search } = useWorkflowParams()
+    const { params } = useWorkflowParams()
 
-    return useSuspenseQuery(trpc.workflows.getAll.queryOptions({
-        page,
-        pageSize,
-        search
-    }))
+    return useSuspenseQuery(trpc.workflows.getAll.queryOptions(params))
 }
 
 export const useCreateWorkflow = () => {

@@ -31,7 +31,7 @@ export const useGlobalSearch = <T extends {
             if (search !== params.search) {
                 setParams({
                     ...params,
-                    search: params.search,
+                    search: search,
                     page: WORKFLOW_TABLE_PAGINATION.DEFAULT_PAGE
                 })
             }
