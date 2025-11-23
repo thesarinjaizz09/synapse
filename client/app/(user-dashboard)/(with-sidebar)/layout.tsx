@@ -6,7 +6,6 @@ import {
 import { AppSidebar } from "@/components/app-sidebar";
 import { SiteHeader } from "@/components/site-header";
 import { isAuthenticated } from "@/lib/auth/utils";
-import type { User } from "better-auth";
 
 export default async function UserDashboardLayout({
     children,
@@ -20,7 +19,7 @@ export default async function UserDashboardLayout({
             <SidebarProvider className="flex flex-col">
                 <SiteHeader />
                 <div className="flex flex-1">
-                    <AppSidebar {...user} />
+                    <AppSidebar name={user.name} email={user.email} />
                     <SidebarInset>
                         {children}
                     </SidebarInset>

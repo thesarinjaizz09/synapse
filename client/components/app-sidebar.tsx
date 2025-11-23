@@ -29,15 +29,18 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
 import Link from "next/link";
-import type { User } from "better-auth";
+
+interface AppSidebarProps {
+  name: string;
+  email: string;
+}
 
 
-
-export function AppSidebar({ ...user }: User) {
+export function AppSidebar({ name, email }: AppSidebarProps) {
   const data = {
     user: {
-      name: user.name || "Jeffrey Epistien",
-      email: user.email || "jeffrey.epistien@me.com",
+      name: name || "Jeffrey Epistien",
+      email: email || "jeffrey.epistien@me.com",
       avatar: "/avatars/shadcn.jpg",
     },
     navMain: [
