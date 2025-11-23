@@ -1,6 +1,7 @@
 import { PlusIcon } from "lucide-react";
 import Link from "next/link";
 import { Spinner } from "../ui/spinner";
+import { cn } from "@/lib/utils";
 
 export type GlobalHeaderProps = {
     title: string;
@@ -43,12 +44,12 @@ export const GlobalHeader = ({
                         className={`inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50`}
                         aria-disabled={disabled || isCreating}
                     >
-                        {isCreating ? 'Creating...' : newButtonLabel}
+                        {newButtonLabel}
                     </Link>
                 ) : (
                     <button
                         onClick={onNew}
-                        className={`inline-flex items-center px-3 py-2 border border-transparent text-xs font-medium rounded-sm shadow-sm text-white bg-primary hover:bg-secondary disabled:opacity-50 cursor-pointer`}
+                        className={cn(`inline-flex items-center px-3 py-2 border border-transparent text-xs font-medium rounded-sm shadow-sm text-white bg-primary hover:bg-secondary disabled:opacity-50 cursor-pointer`, disabled || isCreating ? 'cursor-not-allowed pointer-events-none opacity-50 bg-secondary' : '')}
                         aria-disabled={disabled || isCreating}
                     >
                         {
