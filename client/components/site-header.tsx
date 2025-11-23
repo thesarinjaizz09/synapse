@@ -15,7 +15,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 
 import { SIDEBAR_MAIN_NAVIGATION } from "@/constants/sidebar";
-import { useBreadcrumbs } from "@/hooks/useBreadcrumbs";
+import { useBreadcrumbs } from "@/hooks/use-breadcrumbs";
 import { Key, SidebarIcon } from "lucide-react";
 import { Activity, Timer, AlertTriangle, ListChecks } from "lucide-react";
 
