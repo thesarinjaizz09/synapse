@@ -1,22 +1,9 @@
 "use client"
 
-import * as React from "react"
-import {
-  BookOpen,
-  Bot,
-  Command,
-  Frame,
-  LifeBuoy,
-  Map,
-  PieChart,
-  Send,
-  Settings2,
-  SquareTerminal,
-} from "lucide-react"
 import appLogo from "@/public/alphafusion.png";
 import Image from "next/image";
 import { NavMain } from "@/components/nav-main"
-import { NavProjects } from "@/components/nav-projects"
+import { SIDEBAR_MAIN_NAVIGATION, SIDEBAR_SECONDARY_NAVIGATION } from "@/constants/sidebar";
 import { NavSecondary } from "@/components/nav-secondary"
 import { NavUser } from "@/components/nav-user"
 import {
@@ -43,118 +30,8 @@ export function AppSidebar({ name, email }: AppSidebarProps) {
       email: email || "jeffrey.epistien@me.com",
       avatar: "/avatars/shadcn.jpg",
     },
-    navMain: [
-      {
-        title: "Playground",
-        url: "#",
-        icon: SquareTerminal,
-        isActive: true,
-        items: [
-          {
-            title: "Dashboard",
-            url: "/boards",
-          },
-          {
-            title: "Workflows",
-            url: "/workflows",
-          },
-          {
-            title: "Executions",
-            url: "/executions",
-          },
-        ],
-      },
-      {
-        title: "Assistants",
-        url: "#",
-        icon: Bot,
-        items: [
-          {
-            title: "Genesis",
-            url: "#",
-          },
-          {
-            title: "Explorer",
-            url: "#",
-          },
-          {
-            title: "Quantum",
-            url: "#",
-          },
-        ],
-      },
-      {
-        title: "Documentation",
-        url: "#",
-        icon: BookOpen,
-        items: [
-          {
-            title: "Introduction",
-            url: "#",
-          },
-          {
-            title: "Get Started",
-            url: "#",
-          },
-          {
-            title: "Tutorials",
-            url: "#",
-          },
-          {
-            title: "Changelog",
-            url: "#",
-          },
-        ],
-      },
-      {
-        title: "Settings",
-        url: "#",
-        icon: Settings2,
-        items: [
-          {
-            title: "Team",
-            url: "#",
-          },
-          {
-            title: "General",
-            url: "#",
-          },
-          {
-            title: "Credentials",
-            url: "#",
-          },
-        ],
-      },
-    ],
-    navSecondary: [
-      {
-        title: "Support",
-        url: "#",
-        icon: LifeBuoy,
-      },
-      {
-        title: "Feedback",
-        url: "#",
-        icon: Send,
-      },
-    ],
-    projects: [
-      {
-        name: "Design Engineering",
-        url: "#",
-        icon: Frame,
-      },
-      {
-        name: "Sales & Marketing",
-        url: "#",
-        icon: PieChart,
-      },
-      {
-        name: "Travel",
-        url: "#",
-        icon: Map,
-      },
-    ],
+    navMain: SIDEBAR_MAIN_NAVIGATION,
+    navSecondary: SIDEBAR_SECONDARY_NAVIGATION
   }
   return (
     <Sidebar
@@ -184,7 +61,6 @@ export function AppSidebar({ name, email }: AppSidebarProps) {
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
-        {/* <NavProjects projects={data.projects} /> */}
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
