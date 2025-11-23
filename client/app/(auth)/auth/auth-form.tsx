@@ -50,8 +50,8 @@ export function AuthForm({
           callbackURL: process.env.NEXT_PUBLIC_AUTH_SUCCESS_REDIRECT_URL || "/boards",
         }, {
           onSuccess: () => {
-            toast.success("Credentials authenticated successfully");
             router.push(process.env.NEXT_PUBLIC_AUTH_SUCCESS_REDIRECT_URL || "/boards");
+            toast.success("Credentials authenticated successfully");
           },
           onError: (ctx) => {
             toast.error(ctx.error.message);
