@@ -8,5 +8,5 @@ export default async function UserDashboardLayout({
 }) {
     await isAuthenticated();
     
-    return children
+    return children;
 }
