@@ -1,7 +1,7 @@
 "use client"
 
 import {
-  LogOutIcon,
+  Power,
   User,
 } from "lucide-react"
 import {
@@ -55,7 +55,7 @@ export function NavUser({
               <span className="truncate font-semibold text-primary-foreground">{user.name}</span>
               <span className="truncate text-[10px] text-muted-foreground">{user.email}</span>
             </div>
-            <LogOutIcon className="ml-auto size-3 text-emerald-100/80" onClick={logout} />
+            <Power className="ml-auto size-3 text-emerald-100/80 cursor-pointer hover:bg-muted" onClick={logout} />
           </SidebarMenuButton>
         </SidebarMenuItem>
       </SidebarMenu >
