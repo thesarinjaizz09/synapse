@@ -1,42 +1,17 @@
 "use client"
 
-import { useState } from "react"
 import {
-  BadgeCheck,
-  Bell,
-  ChevronsUpDown,
-  CreditCard,
-  LogOut,
   LogOutIcon,
-  Sparkles,
   User,
 } from "lucide-react"
-
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@/components/ui/avatar"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
 import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  useSidebar,
 } from "@/components/ui/sidebar"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
-import { signOut } from "@/lib/auth/client"
-import { toast } from "sonner"
-import { useRouter } from "next/navigation"
 import { Spinner } from "./ui/spinner"
+import { useLogout } from "@/hooks/use-logout"
 
 export function NavUser({
   user,
@@ -47,36 +22,12 @@ export function NavUser({
     avatar: string
   }
 }) {
-  const { isMobile } = useSidebar()
-  const router = useRouter()
-  const [isLoggingOut, setIsLoggingOut] = useState(false)
-
-  const handleLogout = async () => {
-    setIsLoggingOut(true)
-    try {
-      await signOut({
-        fetchOptions: {
-          onError: (ctx) => {
-            toast.error(ctx.error.message)
-            setIsLoggingOut(false)
-          },
-          onSuccess: () => {
-            router.push("/auth")
-            setIsLoggingOut(false)
-            toast.success("Logged out successfully")
-          },
-        },
-      })
-    } catch (error) {
-      setIsLoggingOut(false)
-      toast.error("Something went wrong while logging out.")
-    }
-  }
+  const { logout, loading } = useLogout()
 
   return (
     <>
       {/* Logout Progress Dialog */}
-      <Dialog open={isLoggingOut}>
+      <Dialog open={loading}>
         <DialogContent className="sm:max-w-md border border-border/50 shadow-lg" showCloseButton={false}>
           <DialogHeader>
             <DialogTitle className="text-lg font-semibold text-center flex items-center justify-start gap-x-2">
@@ -104,7 +55,7 @@ export function NavUser({
               <span className="truncate font-semibold text-primary-foreground">{user.name}</span>
               <span className="truncate text-[10px] text-muted-foreground">{user.email}</span>
             </div>
-            <LogOutIcon className="ml-auto size-3 text-emerald-100/80" onClick={handleLogout} />
+            <LogOutIcon className="ml-auto size-3 text-emerald-100/80" onClick={logout} />
           </SidebarMenuButton>
         </SidebarMenuItem>
       </SidebarMenu >
