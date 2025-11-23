@@ -62,7 +62,7 @@ export function NavMain({
                         <SidebarMenuSubItem key={subItem.title}>
                           <Link href={subItem.url} className="w-full">
                             <SidebarMenuSubButton asChild isActive={subItem.url === usePathname()}>
-                              <span className="w-full flex items-center justify-between text-[12px] tracking-wide">{subItem.title}
+                              <span className="p-2 w-full flex items-center justify-between text-[12px] tracking-wide">{subItem.title}
                               </span>
                             </SidebarMenuSubButton>
                           </Link>

@@ -53,11 +53,11 @@ export function AppSidebar({ ...user }: User) {
           },
           {
             title: "Workflows",
-            url: "#",
+            url: "/workflows",
           },
           {
             title: "Executions",
-            url: "#",
+            url: "/executions",
           },
         ],
       },
