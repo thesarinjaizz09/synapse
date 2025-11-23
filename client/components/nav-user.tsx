@@ -8,6 +8,7 @@ import {
   CreditCard,
   LogOut,
   Sparkles,
+  User,
 } from "lucide-react"
 
 import {
@@ -95,20 +96,20 @@ export function NavUser({
             <DropdownMenuTrigger asChild>
               <SidebarMenuButton
                 size="lg"
-                className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+                className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground flex items-center justify-center shadow-inner border p-2 h-auto"
               >
-                <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarImage src={user.avatar} alt={user.name} />
-                  <AvatarFallback className="rounded-lg">CN</AvatarFallback>
-                </Avatar>
-                <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium">{user.name}</span>
-                  <span className="truncate text-xs">{user.email}</span>
+                <div className="border py-2 px-1 h-full rounded-sm bg-muted">
+                  <User className="h-[14px]  " />
                 </div>
-                <ChevronsUpDown className="ml-auto size-4" />
+                <div className="grid flex-1 text-left text-[13px] tracking-wide">
+                  <span className="truncate font-semibold text-primary-foreground">{user.name}</span>
+                  <span className="truncate text-[10px] text-muted-foreground">{user.email}</span>
+                </div>
+                <ChevronsUpDown className="ml-auto size-3 text-emerald-100/80" />
               </SidebarMenuButton>
             </DropdownMenuTrigger>
-            <DropdownMenuContent
+
+            {/* <DropdownMenuContent
               className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
               side={isMobile ? "bottom" : "right"}
               align="end"
@@ -153,7 +154,7 @@ export function NavUser({
                 <LogOut />
                 Log out
               </DropdownMenuItem>
-            </DropdownMenuContent>
+            </DropdownMenuContent> */}
           </DropdownMenu>
         </SidebarMenuItem>
       </SidebarMenu >
