@@ -1,7 +1,7 @@
 'use client'
 
 import { generateSlug } from "random-word-slugs";
-import { GlobalContainer, GlobalHeader } from "@/components/globals/global-views"
+import { GlobalContainer, GlobalHeader, GlobalSearch } from "@/components/globals/global-views"
 import { useCreateWorkflow, useSuspenseWorkflows } from "../hooks/use-workflows"
 import { toast } from "sonner";
 
@@ -34,11 +34,17 @@ export const WorkflowsHeader = ({ disabled }: { disabled?: boolean }) => {
     )
 }
 
+export const WorkflowsSearch = () => {
+    return (
+        <GlobalSearch placeholder="Search workflows..." onChange={() => { }} value={""} />
+    )
+}
+
 export const WorkflowsContainer = ({ children }: { children: React.ReactNode }) => {
     return (
         <GlobalContainer
             header={<WorkflowsHeader />}
-            search={<></>}
+            search={<WorkflowsSearch />}
             pagination={<></>}
         >
             {children}

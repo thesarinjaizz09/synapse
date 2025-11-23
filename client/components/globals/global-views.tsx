@@ -2,6 +2,7 @@ import { PlusIcon } from "lucide-react";
 import Link from "next/link";
 import { Spinner } from "../ui/spinner";
 import { cn } from "@/lib/utils";
+import { SearchForm } from "../search-form";
 
 export type GlobalHeaderProps = {
     title: string;
@@ -80,5 +81,17 @@ export const GlobalContainer = ({
             {children}
             {pagination}
         </div>
+    )
+}
+
+export interface GlobalSearchProps {
+    value: string;
+    onChange: (value: string) => void;
+    placeholder: string;
+}
+
+export const GlobalSearch = ({ value, onChange, placeholder }: GlobalSearchProps) => {
+    return (
+        <SearchForm value={value} onChange={onChange} placeholder={placeholder}/>
     )
 }
