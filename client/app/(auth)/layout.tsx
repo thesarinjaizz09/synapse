@@ -28,8 +28,8 @@ const AuthLayout = async ({
             <Image
               src={appLogo}
               alt="AlphaFusion Corporation"
-              width={30}
-              className="p-1.5 border-none rounded-sm bg-primary"
+              width={33}
+              className="p-2 border rounded-sm bg-muted"
             />
             <div className="grid flex-1 text-left leading-tight text-primary-foreground">
               <span className="truncate text-md text-primary-foreground font-semibold">
