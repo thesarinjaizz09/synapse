@@ -9,7 +9,7 @@ export const WorkflowsTable = () => {
     return (
         <div>
             <p>
-                {JSON.stringify(workflows.data.workflows, null, 2)}
+                {JSON.stringify(workflows.data?.workflows, null, 2)}
             </p>
         </div>
     )
