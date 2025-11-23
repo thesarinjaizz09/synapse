@@ -4,6 +4,8 @@ import { Spinner } from "../ui/spinner";
 import { cn } from "@/lib/utils";
 import { SearchForm } from "../search-form";
 import { Button } from "../ui/button";
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 export type GlobalHeaderProps = {
     title: string;
@@ -106,42 +108,75 @@ export const GlobalSearch = ({ value, onChange, placeholder }: GlobalSearchProps
     )
 }
 
-export const GlobalPagination = ({ page, pageSize, totalPages, onPageChange, onPageSizeChange, disabled }: GlobalPaginationProps) => {
+export const GlobalPagination = ({
+    page,
+    pageSize,
+    totalPages,
+    onPageChange,
+    onPageSizeChange,
+    disabled
+}: GlobalPaginationProps) => {
     return (
-        <div className="flex items-center justify-between gap-2">
-            <div className="flex items-center gap-2">
-                <span className="text-sm text-muted-foreground">
-                    Page {page} of {totalPages || 1}
+        <div className="flex items-center justify-between w-full py-[6.5px] px-2 rounded-md bg-input/30 backdrop-blur-md border border-white/10 shadow-lg">
+
+            {/* Left side */}
+            <div className="flex items-center">
+                <span className="text-[12.5px] tracking-wide text-muted-foreground">
+                    Page <span className="text-white/70 font-medium">{page}</span> of{" "}
+                    <span className="text-white/70 font-medium">{totalPages || 1}</span>
                 </span>
-                <select
-                    value={pageSize}
-                    onChange={(e) => onPageSizeChange(Number(e.target.value))}
-                    className="border border-muted-foreground rounded-md p-1"
+
+                {/* <Select
+                    value={String(pageSize)}
+                    onValueChange={(val) => onPageSizeChange(Number(val))}
                 >
-                    {[10, 25, 50].map((pageSize) => (
-                        <option key={pageSize} value={pageSize}>
-                            {pageSize}
-                        </option>
-                    ))}
-                </select>
+                    <SelectTrigger className="h-8 w-[85px] bg-black/30 border-white/10 text-white text-[13px]">
+                        <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent className="bg-black/80 border-white/10 text-white">
+                        {[5, 10, 25, 50, 100].map((size) => (
+                            <SelectItem key={size} value={String(size)} className="text-white text-[13px]">
+                                {size} / page
+                            </SelectItem>
+                        ))}
+                    </SelectContent>
+                </Select> */}
             </div>
+
+            {/* Right side */}
             <div className="flex items-center gap-2">
                 <Button
-                    onClick={() => onPageChange(Math.max(page - 1, 1))}
-                    disabled={page === 1 || disabled}
                     size="sm"
-                    className="border border-muted-foreground rounded-md p-1"
+                    variant="outline"
+                    disabled={page === 1 || disabled}
+                    onClick={() => onPageChange(Math.max(page - 1, 1))}
+                    className="
+            h-6 p-0 px-5 rounded-sm 
+            border-white/10 bg-white/5 text-white
+            hover:bg-white/10 hover:border-white/20
+            disabled:opacity-30 disabled:cursor-not-allowed
+            transition-all
+          "
                 >
-                    Previous
+                    <ChevronLeft className="h-4 w-4" />
                 </Button>
+
                 <Button
-                    onClick={() => onPageChange(Math.min(page + 1, totalPages))}
+                    size="sm"
+                    variant="outline"
                     disabled={page === totalPages || totalPages === 0 || disabled}
-                    className="border border-muted-foreground rounded-md p-1"
+                    onClick={() => onPageChange(Math.min(page + 1, totalPages))}
+                    className="
+            h-6 p-0 px-5 rounded-sm  
+            border-white/10 bg-white/5 text-white
+            hover:bg-white/10 hover:border-white/20
+            disabled:opacity-30 disabled:cursor-not-allowed
+            transition-all
+          "
                 >
-                    Next
+                    <ChevronRight className="h-4 w-4" />
                 </Button>
             </div>
         </div>
-    )
-}
+    );
+};

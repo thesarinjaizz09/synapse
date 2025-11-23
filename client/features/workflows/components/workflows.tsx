@@ -1,7 +1,7 @@
 'use client'
 
 import { generateSlug } from "random-word-slugs";
-import { GlobalContainer, GlobalHeader, GlobalSearch } from "@/components/globals/global-views"
+import { GlobalContainer, GlobalHeader, GlobalPagination, GlobalSearch } from "@/components/globals/global-views"
 import { useCreateWorkflow, useSuspenseWorkflows } from "../hooks/use-workflows"
 import { toast } from "sonner";
 import { useWorkflowParams } from "../hooks/use-workflow-params";
@@ -45,12 +45,21 @@ export const WorkflowsSearch = () => {
     )
 }
 
+export const WorkflowsPagination = () => {
+    const workflows = useSuspenseWorkflows()
+    const { params, setParams } = useWorkflowParams()
+
+    return (
+        <GlobalPagination disabled={workflows.isFetching} {...params} onPageChange={(page) => setParams({ ...params, page })} totalPages={workflows.data?.totalPages} page={workflows.data?.page} onPageSizeChange={pageSize => setParams({ ...params, pageSize })} />
+    )
+}
+
 export const WorkflowsContainer = ({ children }: { children: React.ReactNode }) => {
     return (
         <GlobalContainer
             header={<WorkflowsHeader />}
             search={<WorkflowsSearch />}
-            pagination={<></>}
+            pagination={<WorkflowsPagination />}
         >
             {children}
         </GlobalContainer>
