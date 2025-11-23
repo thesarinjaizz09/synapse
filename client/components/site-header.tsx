@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -8,14 +9,42 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-
+import Stats from "./ui/stats";
 import { useSidebar } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 
 import { SIDEBAR_MAIN_NAVIGATION } from "@/constants/sidebar";
 import { useBreadcrumbs } from "@/hooks/useBreadcrumbs";
-import { SidebarIcon } from "lucide-react";
+import { Key, SidebarIcon } from "lucide-react";
+import { Activity, Timer, AlertTriangle, ListChecks } from "lucide-react";
+
+export const HEADER_STATS = [
+  {
+    label: "Running",
+    value: 12,
+    theme: "green",
+    icon: <Activity className="size-3 text-emerald-400" />,
+  },
+  {
+    label: "Uptime",
+    value: "99.97%",
+    theme: "blue",
+    icon: <Timer className="size-3 text-blue-400" />,
+  },
+  {
+    label: "Failed",
+    value: 2,
+    theme: "red",
+    icon: <AlertTriangle className="size-3 text-red-400" />,
+  },
+  {
+    label: "Queue",
+    value: "Low",
+    theme: "purple",
+    icon: <ListChecks className="size-3 text-purple-400" />,
+  },
+];
 
 export function SiteHeader() {
   const { toggleSidebar } = useSidebar();
@@ -40,8 +69,8 @@ export function SiteHeader() {
         <Breadcrumb className="hidden sm:block ml-2">
           <BreadcrumbList>
             {breadcrumbs.map((crumb, i) => (
-              <>
-                <BreadcrumbItem key={i} className="text-white text-[12.5px]">
+              <React.Fragment key={i}>
+                <BreadcrumbItem key={i} className="text-white text-[13px]">
                   {crumb.url ? (
                     <BreadcrumbLink href={crumb.url} key={i}>
                       <span className="hover:underline tracking-wide ">
@@ -56,10 +85,26 @@ export function SiteHeader() {
                 </BreadcrumbItem>
 
                 {i < breadcrumbs.length - 1 && <BreadcrumbSeparator key={`sep-${i}`} />}
-              </>
+              </React.Fragment>
             ))}
           </BreadcrumbList>
         </Breadcrumb>
+
+        <div className="ml-auto flex items-center gap-3 mr-1">
+
+          <div className="ml-auto flex items-center gap-2 pr-3">
+            {HEADER_STATS.map((stat, index) => (
+              <Stats
+                key={index}
+                label={stat.label}
+                value={stat.value}
+                theme={stat.theme as any}
+                icon={stat.icon}
+              />
+            ))}
+          </div>
+
+        </div>
       </div>
     </header>
   );

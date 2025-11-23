@@ -15,7 +15,7 @@ export default async function UserDashboardLayout({
     const { user } = await isAuthenticated();
 
     return (
-        <div className="[--header-height:calc(--spacing(11))]">
+        <div className="[--header-height:calc(--spacing(13))]">
             <SidebarProvider className="flex flex-col">
                 <SiteHeader />
                 <div className="flex flex-1">
