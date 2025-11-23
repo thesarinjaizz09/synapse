@@ -48,8 +48,8 @@ export function NavUser({
             size="lg"
             className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground flex items-center justify-center shadow-inner border p-2 h-auto"
           >
-            <div className="border py-2 px-[0.5px] h-full rounded-sm bg-muted">
-              <User className="h-[14px]  " />
+            <div className="border py-2 px-[4px] h-full rounded-sm bg-muted">
+              <User className="h-[15px]  " />
             </div>
             <div className="grid flex-1 text-left text-[13px] tracking-wide">
               <span className="truncate font-semibold text-primary-foreground">{user.name}</span>
