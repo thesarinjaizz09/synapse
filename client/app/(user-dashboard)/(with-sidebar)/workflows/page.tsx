@@ -1,4 +1,4 @@
-import WorkflowsContainer from "@/features/workflows/components/workflows"
+import { WorkflowsContainer, WorkflowsTable } from "@/features/workflows/components/workflows"
 import { prefetchWorkflows } from "@/features/workflows/server/prefetch"
 import { HydrateClient } from "@/trpc/server"
 import { Suspense } from "react"
@@ -8,12 +8,14 @@ export default async function Page() {
   prefetchWorkflows()
 
   return (
-    <HydrateClient>
-      <ErrorBoundary fallback={<div>Failed to load workflows.</div>}>
-        <Suspense fallback={<div>Loading workflows...</div>}>
-          <WorkflowsContainer />
-      </Suspense>
-    </ErrorBoundary>
-    </HydrateClient >
+    <WorkflowsContainer>
+      <HydrateClient>
+        <ErrorBoundary fallback={<div>Failed to load workflows.</div>}>
+          <Suspense fallback={<div>Loading workflows...</div>}>
+            <WorkflowsTable />
+          </Suspense>
+        </ErrorBoundary>
+      </HydrateClient >
+    </WorkflowsContainer>
   )
 }
