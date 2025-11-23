@@ -28,14 +28,14 @@ const AuthLayout = async ({
             <Image
               src={appLogo}
               alt="AlphaFusion Corporation"
-              width={32}
-              className="p-2 border-none rounded-sm bg-primary"
+              width={33}
+              className="p-2 border rounded-sm bg-muted"
             />
             <div className="grid flex-1 text-left leading-tight text-primary-foreground">
-              <span className="truncate text-md text-primary-foreground">
+              <span className="truncate text-md text-primary-foreground font-semibold">
                 Alphafusion
               </span>
-              <span className="truncate text-xs text-gray-400">Synapse</span>
+              <span className="truncate text-[11px] text-muted-foreground">Synapse</span>
             </div>
           </Link>
         </div>

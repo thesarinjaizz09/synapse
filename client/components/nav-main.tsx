@@ -18,6 +18,8 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar"
+import Link from "next/link"
+import { usePathname } from "next/navigation"
 
 export function NavMain({
   items,
@@ -43,7 +45,7 @@ export function NavMain({
               <SidebarMenuButton asChild tooltip={item.title}>
                 <a href={item.url}>
                   <item.icon />
-                  <span>{item.title}</span>
+                  <span className="leading-tight text-[13px]">{item.title}</span>
                 </a>
               </SidebarMenuButton>
               {item.items?.length ? (
@@ -58,11 +60,12 @@ export function NavMain({
                     <SidebarMenuSub>
                       {item.items?.map((subItem) => (
                         <SidebarMenuSubItem key={subItem.title}>
-                          <SidebarMenuSubButton asChild>
-                            <a href={subItem.url}>
-                              <span>{subItem.title}</span>
-                            </a>
-                          </SidebarMenuSubButton>
+                          <Link href={subItem.url} className="w-full">
+                            <SidebarMenuSubButton asChild isActive={subItem.url === usePathname()}>
+                              <span className="p-2 w-full flex items-center justify-between text-[12px] tracking-wide">{subItem.title}
+                              </span>
+                            </SidebarMenuSubButton>
+                          </Link>
                         </SidebarMenuSubItem>
                       ))}
                     </SidebarMenuSub>
