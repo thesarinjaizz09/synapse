@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Spinner } from "../ui/spinner";
 import { cn } from "@/lib/utils";
 import { SearchForm } from "../search-form";
+import { Button } from "../ui/button";
 
 export type GlobalHeaderProps = {
     title: string;
@@ -16,6 +17,21 @@ export type GlobalHeaderProps = {
         | { onNew?: never; newButtonHref?: never }
     );
 
+export interface GlobalSearchProps {
+    value: string;
+    onChange: (value: string) => void;
+    placeholder: string;
+}
+
+export interface GlobalPaginationProps {
+    page: number;
+    pageSize: number;
+    totalPages: number;
+    disabled?: boolean;
+    onPageChange: (page: number) => void;
+    onPageSizeChange: (pageSize: number) => void;
+}
+
 
 export const GlobalHeader = ({
     title,
@@ -27,7 +43,7 @@ export const GlobalHeader = ({
     newButtonHref,
 }: GlobalHeaderProps) => {
     return (
-        <header className="mb-5 flex items-center justify-between border-b border-gray-500 pb-5">
+        <header className="mb-8 flex items-center justify-between border-b border-gray-500 pb-5">
             <div>
                 <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
                     {title}
@@ -75,7 +91,7 @@ export const GlobalContainer = ({
     children: React.ReactNode;
 }) => {
     return (
-        <div className="flex flex-col gap-8 bg-red border w-full h-full max-w-screen max-h-screen p-7 overflow-y-auto">
+        <div className="flex flex-col gap-6 bg-red border w-full h-full max-w-screen max-h-screen p-7 overflow-y-auto">
             {header}
             {search}
             {children}
@@ -84,14 +100,48 @@ export const GlobalContainer = ({
     )
 }
 
-export interface GlobalSearchProps {
-    value: string;
-    onChange: (value: string) => void;
-    placeholder: string;
-}
-
 export const GlobalSearch = ({ value, onChange, placeholder }: GlobalSearchProps) => {
     return (
-        <SearchForm value={value} onChange={onChange} placeholder={placeholder}/>
+        <SearchForm value={value} onChange={onChange} placeholder={placeholder} />
+    )
+}
+
+export const GlobalPagination = ({ page, pageSize, totalPages, onPageChange, onPageSizeChange, disabled }: GlobalPaginationProps) => {
+    return (
+        <div className="flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2">
+                <span className="text-sm text-muted-foreground">
+                    Page {page} of {totalPages || 1}
+                </span>
+                <select
+                    value={pageSize}
+                    onChange={(e) => onPageSizeChange(Number(e.target.value))}
+                    className="border border-muted-foreground rounded-md p-1"
+                >
+                    {[10, 25, 50].map((pageSize) => (
+                        <option key={pageSize} value={pageSize}>
+                            {pageSize}
+                        </option>
+                    ))}
+                </select>
+            </div>
+            <div className="flex items-center gap-2">
+                <Button
+                    onClick={() => onPageChange(Math.max(page - 1, 1))}
+                    disabled={page === 1 || disabled}
+                    size="sm"
+                    className="border border-muted-foreground rounded-md p-1"
+                >
+                    Previous
+                </Button>
+                <Button
+                    onClick={() => onPageChange(Math.min(page + 1, totalPages))}
+                    disabled={page === totalPages || totalPages === 0 || disabled}
+                    className="border border-muted-foreground rounded-md p-1"
+                >
+                    Next
+                </Button>
+            </div>
+        </div>
     )
 }
