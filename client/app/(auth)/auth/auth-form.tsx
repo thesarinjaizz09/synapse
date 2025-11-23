@@ -50,8 +50,8 @@ export function AuthForm({
           callbackURL: process.env.NEXT_PUBLIC_AUTH_SUCCESS_REDIRECT_URL || "/boards",
         }, {
           onSuccess: () => {
-            toast.success("Credentials authenticated successfully");
             router.push(process.env.NEXT_PUBLIC_AUTH_SUCCESS_REDIRECT_URL || "/boards");
+            toast.success("Credentials authenticated successfully");
           },
           onError: (ctx) => {
             toast.error(ctx.error.message);
@@ -70,7 +70,7 @@ export function AuthForm({
           <div className="flex flex-col items-start gap-1 text-left">
             <h1 className="text-3xl font-bold">Auth Credentials</h1>
             <p className="text-sm w-full">
-              Enter your credentials to access the AlphaFusion Dashboard
+              Authenticate your credentials to access the AlphaFusion Dashboard
             </p>
           </div>
           <FormField
