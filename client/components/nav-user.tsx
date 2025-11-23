@@ -59,9 +59,9 @@ export function NavUser({
             setIsLoggingOut(false)
           },
           onSuccess: () => {
-            toast.success("Logged out successfully")
-            setIsLoggingOut(false)
             router.push("/auth")
+            setIsLoggingOut(false)
+            toast.success("Logged out successfully")
           },
         },
       })
@@ -75,7 +75,7 @@ export function NavUser({
     <>
       {/* Logout Progress Dialog */}
       <Dialog open={isLoggingOut}>
-        <DialogContent className="sm:max-w-md border border-border/50 shadow-lg">
+        <DialogContent className="sm:max-w-md border border-border/50 shadow-lg" showCloseButton={false}>
           <DialogHeader>
             <DialogTitle className="text-lg font-semibold text-center flex items-center justify-start gap-x-2">
               <Spinner />
