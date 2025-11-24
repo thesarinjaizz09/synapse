@@ -17,7 +17,7 @@ async function deepClientCleanup() {
   try {
     localStorage.clear();
     sessionStorage.clear();
-  } catch (_) {}
+  } catch (_) { }
 
   // Clear IndexedDB
   try {
@@ -31,7 +31,7 @@ async function deepClientCleanup() {
         }
       }
     }
-  } catch (_) {}
+  } catch (_) { }
 
   // Clear client-side cookies
   try {
@@ -40,7 +40,7 @@ async function deepClientCleanup() {
       const name = eqPos > -1 ? cookie.slice(0, eqPos) : cookie;
       document.cookie = `${name}=; Max-Age=0; path=/`;
     });
-  } catch (_) {}
+  } catch (_) { }
 
   // Clear SWR cache
   try {
@@ -48,7 +48,7 @@ async function deepClientCleanup() {
     if (g.mutate) {
       await g.mutate(null, undefined, false);
     }
-  } catch (_) {}
+  } catch (_) { }
 
   // Clear React Query cache
   try {
@@ -56,7 +56,7 @@ async function deepClientCleanup() {
     if (g.queryClient) {
       g.queryClient.clear();
     }
-  } catch (_) {}
+  } catch (_) { }
 }
 
 /**
@@ -65,7 +65,7 @@ async function deepClientCleanup() {
 async function clearServerCookies() {
   try {
     await fetch("/api/logout", { method: "POST" });
-  } catch (_) {}
+  } catch (_) { }
 }
 
 export function useLogout() {
@@ -82,7 +82,7 @@ export function useLogout() {
       // BetterAuth logout
       await signOut({
         fetchOptions: {
-          onSuccess: () => {},
+          onSuccess: () => { },
           onError: (ctx) => {
             toast.error(ctx.error.message);
             setLoading(false);
@@ -93,14 +93,15 @@ export function useLogout() {
       // Full deep cleanup
       await deepClientCleanup();
 
-      toast.success("Logged out successfully");
+      toast.success("Logged out successfully!");
 
       // Navigate to login
       router.push("/auth");
+      setLoading(false);
 
     } catch (err) {
       console.error("Logout error:", err);
-      toast.error("Error logging out.");
+      toast.error("Error logging out...");
     } finally {
       setLoading(false);
     }
