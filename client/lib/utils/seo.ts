@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"; // <-- change to your production domain
-const DEFAULT_IMAGE = `${BASE_URL}/og-default.jpg`;
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+const DEFAULT_IMAGE = `${BASE_URL}/og-synapse-default.jpg`;
 
 function isAbsoluteUrl(u: string): boolean {
     return /^https?:\/\//i.test(u);
@@ -10,25 +10,25 @@ function isAbsoluteUrl(u: string): boolean {
 const defaultMetadata: Metadata = {
     metadataBase: new URL(BASE_URL),
     title: {
-        default: "AlphaFusion Terminal",
-        template: "%s - AlphaFusion Terminal",
+        default: "Synapse – AI Agentic Workflow Builder",
+        template: "%s - Synapse",
     },
     description:
-        "AlphaFusion Terminal – Your AI-powered trading ecosystem for equities, assets and more. Analyze live markets, forecast AI-driven signals, manage portfolios, and automate trades seamlessly.",
+        "Synapse is an advanced AI agentic workflow builder that lets you create automated, intelligent, multi-step workflows powered by real-time AI reasoning, tools, APIs, and data orchestration.",
     openGraph: {
         type: "website",
         locale: "en_US",
         url: BASE_URL,
-        siteName: "AlphaFusion Terminal",
-        title: "AlphaFusion Terminal",
+        siteName: "Synapse",
+        title: "Synapse – AI Agentic Workflow Builder",
         description:
-            "Your AI-powered trading ecosystem for equities, assets, and more — combining real-time analytics with autonomous trading intelligence.",
+            "Build autonomous agent workflows that think, plan, act, and execute complex tasks across APIs, data pipelines, and integrations.",
         images: [
             {
                 url: DEFAULT_IMAGE,
                 width: 1200,
                 height: 630,
-                alt: "AlphaFusion Terminal - AI Trading Platform",
+                alt: "Synapse – AI Agentic Workflow Builder",
             },
         ],
     },
@@ -36,9 +36,9 @@ const defaultMetadata: Metadata = {
         card: "summary_large_image",
         site: "@AlphaFusionAI",
         creator: "@AlphaFusionAI",
-        title: "AlphaFusion Terminal",
+        title: "Synapse – AI Agentic Workflow Builder",
         description:
-            "Your AI-powered trading ecosystem for equities, assets, and more — combining real-time analytics with autonomous trading intelligence.",
+            "Create intelligent agent workflows that automate tasks, orchestrate APIs, and perform autonomous actions with AI-driven reasoning.",
         images: [DEFAULT_IMAGE],
     },
     robots: {
@@ -59,9 +59,8 @@ const defaultMetadata: Metadata = {
     alternates: {
         canonical: BASE_URL,
     },
-    category: "Finance & Technology",
+    category: "AI Automation & Workflow Orchestration",
 };
-
 
 export function generatePageMetadata(options?: {
     title?: string;
@@ -78,19 +77,17 @@ export function generatePageMetadata(options?: {
         schemaType = "WebPage",
     } = options || {};
 
-    const fullTitle = title
-        ? `${title} - AlphaFusion Terminal`
-        : "AlphaFusion Terminal";
+    const fullTitle = title ? `${title} - Synapse` : "Synapse";
 
     const metaDescription =
         description ||
-        "AlphaFusion Terminal – AI-powered trading ecosystem for equities, assets and more.";
+        "Synapse is the AI agentic workflow builder that lets you design autonomous, intelligent workflows with real-time reasoning and automation.";
 
-    // Structured data (JSON-LD)
+    // JSON-LD structured data
     const structuredData = {
         "@context": "https://schema.org",
         "@type": schemaType,
-        name: title || "AlphaFusion Terminal",
+        name: title || "Synapse – AI Agentic Workflow Builder",
         description: metaDescription,
         url: isAbsoluteUrl(url) ? url : `${BASE_URL}${url}`,
         image: isAbsoluteUrl(image) ? image : `${BASE_URL}${image}`,
@@ -99,7 +96,7 @@ export function generatePageMetadata(options?: {
             name: "AlphaFusion Corporation",
             logo: {
                 "@type": "ImageObject",
-                url: `${BASE_URL}/public/alphafusion.png`,
+                url: `${BASE_URL}/alphafusion.png`,
             },
         },
         inLanguage: "en",
@@ -119,7 +116,7 @@ export function generatePageMetadata(options?: {
                     url: image,
                     width: 1200,
                     height: 630,
-                    alt: title || "AlphaFusion Terminal",
+                    alt: title || "Synapse – AI Agentic Workflow Builder",
                 },
             ],
         },
@@ -132,7 +129,6 @@ export function generatePageMetadata(options?: {
         alternates: {
             canonical: url,
         },
-        // Inject JSON-LD script for Google + AI crawlers
         other: {
             "script:type:application/ld+json": JSON.stringify(structuredData),
         },
