@@ -1,4 +1,4 @@
-import { AlertCircleIcon, ArrowUpRightIcon, ImportIcon, PackageOpenIcon, PlusIcon } from "lucide-react";
+import { AlertCircleIcon, ArrowUpRightIcon, ImportIcon, PackageOpenIcon, PlusIcon, TrashIcon } from "lucide-react";
 import Link from "next/link";
 import { Spinner } from "../ui/spinner";
 import { cn } from "@/lib/utils";
@@ -7,16 +7,20 @@ import { Button } from "../ui/button";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "../ui/empty";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { Card, CardContent, CardDescription, CardTitle } from "../ui/card";
+import React from "react";
 
-export interface StateViewProps {
+
+// TYPES
+interface StateViewProps {
     message?: string
 }
 
-export interface HelperViewProps extends StateViewProps {
+interface HelperViewProps extends StateViewProps {
     view?: string
 }
 
-export type GlobalEmptyProps = {
+type GlobalEmptyProps = {
     title: string;
     description?: string;
     newButtonLabel: string;
@@ -32,7 +36,7 @@ export type GlobalEmptyProps = {
     isSecondaryDisabled?: boolean
 };
 
-export type GlobalHeaderProps = {
+type GlobalHeaderProps = {
     title: string;
     description?: string;
     newButtonLabel: string;
@@ -45,13 +49,13 @@ export type GlobalHeaderProps = {
         | { onNew?: never; newButtonHref?: never }
     );
 
-export interface GlobalSearchProps {
+interface GlobalSearchProps {
     value: string;
     onChange: (value: string) => void;
     placeholder: string;
 }
 
-export interface GlobalPaginationProps {
+interface GlobalPaginationProps {
     page: number;
     pageSize: number;
     totalPages: number;
@@ -60,9 +64,29 @@ export interface GlobalPaginationProps {
     onPageSizeChange: (pageSize: number) => void;
 }
 
+interface GlobalListProps<T> {
+    items: T[];
+    renderItem: (item: T, index: number) => React.ReactNode;
+    getKey?: (item: T, index: number) => string | number;
+    emptyView?: React.ReactNode;
+    className?: string
+}
+
+interface GlobalItemProps {
+    href: string;
+    title: string;
+    icon?: React.ReactNode;
+    subtitle?: React.ReactNode;
+    image?: React.ReactNode;
+    actions?: React.ReactNode;
+    onRemove?: () => void | Promise<void>;
+    isRemoving?: boolean;
+    className?: string
+}
 
 
 
+// COMPONENTS
 export const GlobalHeader = ({
     title,
     description,
@@ -74,7 +98,7 @@ export const GlobalHeader = ({
     onCreatingText
 }: GlobalHeaderProps) => {
     return (
-        <header className="mb-8 flex items-center justify-between border-b border-gray-500 pb-5">
+        <header className="mb-4 flex items-center justify-between border-b border-gray-500 pb-5">
             <div>
                 <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
                     {title}
@@ -215,7 +239,7 @@ export const GlobalLoadingView = ({
     message
 }: HelperViewProps) => {
     return (
-        <div className="flex items-center justify-center h-full border rounded-md">
+        <div className="flex items-center justify-center h-[300px] max-h-[300px] border rounded-md">
             <div className="flex flex-col items-center justify-center gap-2">
                 <Spinner className="text-primary size-5" />
                 {
@@ -233,7 +257,7 @@ export const GlobalErrorView = ({
     message
 }: HelperViewProps) => {
     return (
-        <div className="flex items-center justify-center h-full border rounded-md">
+        <div className="flex items-center justify-center h-[300px] max-h-[300px] border rounded-md">
             <div className="flex flex-col items-center justify-center gap-2">
                 <AlertCircleIcon className="text-primary size-5" />
                 {
@@ -260,7 +284,7 @@ export const GlobalEmptyView = ({
     isSecondaryDisabled = true
 }: GlobalEmptyProps) => {
     return (
-        <Empty className="border">
+        <Empty className="border h-[300px] max-h-[300px]">
             <EmptyHeader>
                 <EmptyMedia variant="icon" className="rounded-sm">
                     <PackageOpenIcon className="size-5" />
@@ -295,5 +319,82 @@ export const GlobalEmptyView = ({
                 </div>
             </EmptyContent>
         </Empty>
+    )
+}
+
+export function GlobalList<T>({
+    items,
+    renderItem,
+    getKey,
+    emptyView,
+    className
+}: GlobalListProps<T>) {
+    if (items.length === 0 && emptyView) return emptyView
+
+    return (
+        <div className={cn('flex flex-col gap-2', className)}>
+            {items.map((item, index) => (
+                <div key={getKey ? getKey(item, index) : index}>
+                    {renderItem(item, index)}
+                </div>
+            ))}
+        </div>
+    )
+}
+
+export const GlobalItem = ({
+    href,
+    title,
+    icon,
+    subtitle,
+    image,
+    actions,
+    onRemove,
+    isRemoving,
+    className
+}: GlobalItemProps) => {
+    const handleRemove = async (e: React.MouseEvent) => {
+        e.preventDefault()
+        e.stopPropagation()
+
+        if (isRemoving) return
+
+        if (onRemove) {
+            await onRemove()
+        }
+    }
+
+    return (
+        <Link href={href} prefetch>
+            <Card className={cn("border cursor-pointer p-3 px-2 rounded-md",
+                isRemoving ? 'opacity-50 cursor-not-allowed' : '',
+                className)}>
+                <CardContent className="flex items-center justify-between p-0">
+                    <div className="flex items-center gap-3">
+                        {icon || image}
+                        <div>
+                            <CardTitle className="text-[13px] tracking-wide font-semibold underline">
+                                {title}
+                            </CardTitle>
+                            {
+                                !!subtitle && <CardDescription className="text-[11px]">
+                                    {subtitle}
+                                </CardDescription>
+                            }
+                        </div>
+                    </div>
+                    {
+                        !!actions && <div className="flex items-center gap-2">
+                            {actions}
+                        </div>
+                    }
+                    {
+                        onRemove && <button onClick={handleRemove} className="cursor-pointer">
+                            <TrashIcon className="h-4 w-4" />
+                        </button>
+                    }
+                </CardContent>
+            </Card>
+        </Link>
     )
 }

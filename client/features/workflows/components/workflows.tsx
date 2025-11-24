@@ -9,12 +9,13 @@ import {
 } from '@tanstack/react-table'
 import { Badge } from '@/components/ui/badge';
 import { generateSlug } from "random-word-slugs";
-import { GlobalContainer, GlobalEmptyView, GlobalErrorView, GlobalHeader, GlobalLoadingView, GlobalPagination, GlobalSearch } from "@/components/globals/global-views"
+import { GlobalContainer, GlobalEmptyView, GlobalErrorView, GlobalHeader, GlobalItem, GlobalList, GlobalLoadingView, GlobalPagination, GlobalSearch } from "@/components/globals/global-views"
 import { useCreateWorkflow, useSuspenseWorkflows } from "../hooks/use-workflows"
 import { toast } from "sonner";
 import { useWorkflowParams } from "../hooks/use-workflow-params";
 import { useGlobalSearch } from "../hooks/use-global-search";
 import type { Workflow } from '@/lib/generated/prisma/client';
+import { WorkflowIcon } from 'lucide-react';
 
 export const WorkflowsTableTanstack = () => {
     const workflows = useSuspenseWorkflows()
@@ -119,10 +120,15 @@ export const WorkflowsTable = () => {
     if (workflows.data?.workflows.length === 0) return <WorkflowsEmpty />
 
     return (
-        <div className='h-full max-h-screen overflow-y-auto border rounded-md'>
-            {workflows.isLoading ? <WorkflowsLoader /> : <p>
-                {JSON.stringify(workflows.data?.workflows, null, 2)}
-            </p>}
+        <div className='min-h-[300px] h-fit overflow-y-auto rounded-md'>
+            {workflows.isLoading ? <WorkflowsLoader /> :
+                <GlobalList
+                    items={workflows.data?.workflows || []}
+                    getKey={workflow => workflow.id}
+                    renderItem={workflow => <WorkflowsItem workflow={workflow} />}
+                    emptyView={<WorkflowsEmpty />}
+                />
+            }
         </div>
     )
 }
@@ -158,7 +164,7 @@ export const WorkflowsPagination = () => {
     const { params, setParams } = useWorkflowParams()
 
     return (
-        <GlobalPagination disabled={workflows.isFetching} {...params} onPageChange={(page) => setParams({ ...params, page })} totalPages={workflows.data?.totalPages} page={workflows.data?.page} onPageSizeChange={pageSize => setParams({ ...params, pageSize })} />
+        workflows.data?.workflows.length !== 0 && <GlobalPagination disabled={workflows.isFetching} {...params} onPageChange={(page) => setParams({ ...params, page })} totalPages={workflows.data?.totalPages} page={workflows.data?.page} onPageSizeChange={pageSize => setParams({ ...params, pageSize })} />
     )
 }
 
@@ -177,7 +183,7 @@ export const WorkflowsError = () => {
 export const WorkflowsEmpty = ({ disabled }: { disabled?: boolean }) => {
     const { params, setParams } = useWorkflowParams()
     const { mutate: createWorkflow, isPending } = useCreateWorkflow()
-    
+
     const handleCreateWorkflow = () => {
         createWorkflow({ name: generateSlug() }, {
             onSuccess: (data) => {
@@ -194,6 +200,22 @@ export const WorkflowsEmpty = ({ disabled }: { disabled?: boolean }) => {
         <>
             <GlobalEmptyView title='No Workflows Found!' message='No workflows found. Get started by creating a workflow...' newButtonLabel='Create Workflow' secondaryButtonLabel='Import Workflow' isCreating={isPending} disabled={disabled} onNew={handleCreateWorkflow} />
         </>
+    )
+}
+
+export const WorkflowsItem = ({ workflow }: { workflow: Workflow }) => {
+    return (
+        <GlobalItem href={`/workflows/${workflow.id}`} title={workflow.name} subtitle={
+            <>
+                Updated TODO{" "}
+                &bull; Created{" "}
+                TODO
+            </>
+        } image={
+            <div className="flex items-center justify-center border rounded-sm p-2">
+                <WorkflowIcon className='size-5 text-primary' />
+            </div>
+        } onRemove={() => { }} isRemoving={false} />
     )
 }
 
