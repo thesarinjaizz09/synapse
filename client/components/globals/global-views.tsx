@@ -121,7 +121,7 @@ export const GlobalHeader = ({
                 ) : (
                     <button
                         onClick={onNew}
-                        className={cn(`inline-flex items-center px-3 py-2 border border-transparent text-xs font-medium rounded-sm shadow-sm text-white bg-primary hover:bg-secondary hover:border-gray-700 disabled:opacity-50 cursor-pointer`, disabled || isCreating ? 'cursor-not-allowed pointer-events-none opacity-50 bg-secondary' : '')}
+                        className={cn(`inline-flex items-center px-3 py-2 border border-transparent text-xs font-medium rounded-sm shadow-sm text-white bg-primary hover:bg-secondary hover:border-gray-700 hover:text-primary disabled:opacity-50 cursor-pointer`, disabled || isCreating ? 'cursor-not-allowed pointer-events-none opacity-50 bg-secondary' : '')}
                         aria-disabled={disabled || isCreating}
                     >
                         {
@@ -208,7 +208,7 @@ export const GlobalPagination = ({
             border-white/10 bg-white/5 text-white
             hover:bg-white/10 hover:border-white/20
             disabled:opacity-30 disabled:cursor-not-allowed
-            transition-all
+            transition-all cursor-pointer
           "
                 >
                     <ChevronLeft className="h-4 w-4" />
@@ -224,7 +224,7 @@ export const GlobalPagination = ({
             border-white/10 bg-white/5 text-white
             hover:bg-white/10 hover:border-white/20
             disabled:opacity-30 disabled:cursor-not-allowed
-            transition-all
+            transition-all cursor-pointer
           "
                 >
                     <ChevronRight className="h-4 w-4" />
@@ -300,7 +300,7 @@ export const GlobalEmptyView = ({
                 <div className="flex gap-2">
                     <button
                         onClick={onNew}
-                        className={cn(`inline-flex items-center px-3 py-2 border border-transparent text-xs font-medium rounded-sm shadow-sm text-white bg-primary hover:bg-secondary hover:border-gray-700 disabled:opacity-50 cursor-pointer`, disabled || isCreating ? 'cursor-not-allowed pointer-events-none opacity-50 bg-secondary' : '')}
+                        className={cn(`inline-flex items-center px-3 py-2 border border-transparent text-xs font-medium rounded-sm shadow-sm text-white bg-primary hover:bg-secondary hover:border-gray-700 hover:text-primary disabled:opacity-50 cursor-pointer`, disabled || isCreating ? 'cursor-not-allowed pointer-events-none opacity-50 bg-secondary' : '')}
                         aria-disabled={disabled || isCreating}
                     >
                         {
@@ -309,7 +309,7 @@ export const GlobalEmptyView = ({
                     </button>
                     <button
                         onClick={onNew}
-                        className={cn(`inline-flex items-center px-3 py-2 border border-gray-700 text-xs font-medium rounded-sm shadow-sm text-white bg-muted hover:bg-background disabled:opacity-50 cursor-pointer`, isSecondaryDisabled || isSecondaryCreating ? 'cursor-not-allowed pointer-events-none opacity-50 bg-secondary' : '')}
+                        className={cn(`inline-flex items-center px-3 py-2 border border-gray-700 text-xs font-medium rounded-sm shadow-sm text-white bg-muted hover:bg-background disabled:opacity-50 cursor-pointer hover:text-primary`, isSecondaryDisabled || isSecondaryCreating ? 'cursor-not-allowed pointer-events-none opacity-50 bg-secondary' : '')}
                         aria-disabled={isSecondaryDisabled || isSecondaryCreating}
                     >
                         {
@@ -368,6 +368,7 @@ export const GlobalItem = ({
         <Link href={href} prefetch>
             <Card className={cn("border cursor-pointer p-3 px-2 rounded-md",
                 isRemoving ? 'opacity-50 cursor-not-allowed' : '',
+                'transition-transform duration-200 hover:rounded-2xl hover:text-primary',
                 className)}>
                 <CardContent className="flex items-center justify-between p-0">
                     <div className="flex items-center gap-3">
@@ -387,11 +388,6 @@ export const GlobalItem = ({
                         !!actions && <div className="flex items-center gap-2">
                             {actions}
                         </div>
-                    }
-                    {
-                        onRemove && <button onClick={handleRemove} className="cursor-pointer">
-                            <TrashIcon className="h-4 w-4" />
-                        </button>
                     }
                 </CardContent>
             </Card>

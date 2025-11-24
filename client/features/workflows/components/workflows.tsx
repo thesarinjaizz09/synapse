@@ -15,7 +15,7 @@ import { toast } from "sonner";
 import { useWorkflowParams } from "../hooks/use-workflow-params";
 import { useGlobalSearch } from "../hooks/use-global-search";
 import type { Workflow } from '@/lib/generated/prisma/client';
-import { WorkflowIcon } from 'lucide-react';
+import { Ban, CirclePower, Radar, Radio, Shield, ShieldAlert, ShieldCheck, TrashIcon, WorkflowIcon } from 'lucide-react';
 
 export const WorkflowsTableTanstack = () => {
     const workflows = useSuspenseWorkflows()
@@ -204,6 +204,22 @@ export const WorkflowsEmpty = ({ disabled }: { disabled?: boolean }) => {
 }
 
 export const WorkflowsItem = ({ workflow }: { workflow: Workflow }) => {
+    const actions = <div className="border px-2 py-1.5 flex items-center gap-4 rounded-sm transition-transform duration-200 hover:rounded-lg hover:scale-102">
+        <button className='cursor-pointer'>
+            {
+                workflow.status === "FAILED" ? <Ban className="size-4 text-red-500" /> : <Ban className="size-4 text-green-500" />
+            }
+        </button>
+        <button className="cursor-pointer">
+            <CirclePower className={
+                workflow.status === "ACTIVE" ? "size-4 text-green-500" : "size-4 text-white"
+            } />
+        </button>
+        <button onClick={() => { }} className="cursor-pointer">
+            <TrashIcon className="size-4" />
+        </button>
+    </div>
+
     return (
         <GlobalItem href={`/workflows/${workflow.id}`} title={workflow.name} subtitle={
             <>
@@ -215,7 +231,7 @@ export const WorkflowsItem = ({ workflow }: { workflow: Workflow }) => {
             <div className="flex items-center justify-center border rounded-sm p-2">
                 <WorkflowIcon className='size-5 text-primary' />
             </div>
-        } onRemove={() => { }} isRemoving={false} />
+        } onRemove={() => { }} isRemoving={false} actions={actions} />
     )
 }
 
