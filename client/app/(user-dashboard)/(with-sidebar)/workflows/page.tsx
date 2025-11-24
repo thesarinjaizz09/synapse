@@ -1,4 +1,4 @@
-import { WorkflowsContainer, WorkflowsTable } from "@/features/workflows/components/workflows"
+import { WorkflowError, WorkflowLoader, WorkflowsContainer, WorkflowsTable } from "@/features/workflows/components/workflows"
 import { workflowParamsLoader } from "@/features/workflows/server/params-loader"
 import { prefetchWorkflows } from "@/features/workflows/server/prefetch"
 import { HydrateClient } from "@/trpc/server"
@@ -17,8 +17,8 @@ export default async function Page({ searchParams }: PageProps) {
   return (
     <WorkflowsContainer>
       <HydrateClient>
-        <ErrorBoundary fallback={<div>Failed to load workflows.</div>}>
-          <Suspense fallback={<div>Loading workflows...</div>}>
+        <ErrorBoundary fallback={<WorkflowError />}>
+          <Suspense fallback={<WorkflowLoader />}>
             <WorkflowsTable />
           </Suspense>
         </ErrorBoundary>

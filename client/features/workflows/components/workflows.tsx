@@ -9,7 +9,7 @@ import {
 } from '@tanstack/react-table'
 import { Badge } from '@/components/ui/badge';
 import { generateSlug } from "random-word-slugs";
-import { GlobalContainer, GlobalHeader, GlobalPagination, GlobalSearch } from "@/components/globals/global-views"
+import { GlobalContainer, GlobalErrorView, GlobalHeader, GlobalLoadingView, GlobalPagination, GlobalSearch } from "@/components/globals/global-views"
 import { useCreateWorkflow, useSuspenseWorkflows } from "../hooks/use-workflows"
 import { toast } from "sonner";
 import { useWorkflowParams } from "../hooks/use-workflow-params";
@@ -118,10 +118,10 @@ export const WorkflowsTable = () => {
 
 
     return (
-        <div>
-            <p>
+        <div className='h-full max-h-screen overflow-y-auto border rounded-md'>
+            {workflows.isLoading ? <GlobalLoadingView /> : <p>
                 {JSON.stringify(workflows.data?.workflows, null, 2)}
-            </p>
+            </p>}
         </div>
     )
 }
@@ -158,6 +158,18 @@ export const WorkflowsPagination = () => {
 
     return (
         <GlobalPagination disabled={workflows.isFetching} {...params} onPageChange={(page) => setParams({ ...params, page })} totalPages={workflows.data?.totalPages} page={workflows.data?.page} onPageSizeChange={pageSize => setParams({ ...params, pageSize })} />
+    )
+}
+
+export const WorkflowLoader = () => {
+    return (
+        <GlobalLoadingView message='Fetching workflows...' />
+    )
+}
+
+export const WorkflowError = () => {
+    return (
+        <GlobalErrorView message='Error fetching workflows...' />
     )
 }
 

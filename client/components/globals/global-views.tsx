@@ -1,4 +1,4 @@
-import { PlusIcon } from "lucide-react";
+import { AlertCircleIcon, PlusIcon } from "lucide-react";
 import Link from "next/link";
 import { Spinner } from "../ui/spinner";
 import { cn } from "@/lib/utils";
@@ -6,6 +6,14 @@ import { SearchForm } from "../search-form";
 import { Button } from "../ui/button";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+
+interface StateViewProps {
+    message?: string
+}
+
+interface HelperViewProps extends StateViewProps {
+    view?: string
+}
 
 export type GlobalHeaderProps = {
     title: string;
@@ -180,3 +188,41 @@ export const GlobalPagination = ({
         </div>
     );
 };
+
+export const GlobalLoadingView = ({
+    view = 'items',
+    message
+}: HelperViewProps) => {
+    return (
+        <div className="flex items-center justify-center h-full border rounded-md">
+            <div className="flex flex-col items-center justify-center gap-2">
+                <Spinner className="text-primary size-5" />
+                {
+                    !!message ? <p className="text-sm font-semibold text-muted-foreground">{message}</p> : <p className="text-sm font-semibold text-muted-foreground">
+                        {`Loading ${view}...`}
+                    </p>
+                }
+            </div>
+        </div>
+    )
+}
+
+export const GlobalErrorView = ({
+    view = 'items',
+    message
+}: HelperViewProps) => {
+    return (
+        <div className="flex items-center justify-center h-full border rounded-md">
+            <div className="flex flex-col items-center justify-center gap-2">
+                <AlertCircleIcon className="text-primary size-5" />
+                {
+                    !!message ? <p className="text-sm font-semibold text-muted-foreground">{message}</p> : <p className="text-sm font-semibold text-muted-foreground">
+                        {`Error in ${view}...`}
+                    </p>
+                }
+            </div>
+        </div>
+    )
+}
+
+
