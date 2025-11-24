@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import LoadingBar from "./loading-bar";
 import { Geist, Geist_Mono } from "next/font/google";
 import { TRPCReactProvider } from "@/trpc/client";
 import { Toaster } from "@/components/ui/sonner";
@@ -30,6 +31,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <LoadingBar />
         <TRPCReactProvider>
           <NuqsAdapter>
             {children}
