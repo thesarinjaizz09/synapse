@@ -349,23 +349,11 @@ export const GlobalItem = ({
     subtitle,
     image,
     actions,
-    onRemove,
     isRemoving,
     className
 }: GlobalItemProps) => {
-    const handleRemove = async (e: React.MouseEvent) => {
-        e.preventDefault()
-        e.stopPropagation()
-
-        if (isRemoving) return
-
-        if (onRemove) {
-            await onRemove()
-        }
-    }
-
     return (
-        <Link href={href} prefetch>
+        <Link href={href} prefetch aria-disabled={isRemoving}>
             <Card className={cn("border cursor-pointer p-3 px-2 rounded-md",
                 isRemoving ? 'opacity-50 cursor-not-allowed' : '',
                 'transition-transform duration-200 hover:rounded-2xl hover:text-primary',
