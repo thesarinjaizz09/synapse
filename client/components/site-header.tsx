@@ -24,25 +24,25 @@ export const HEADER_STATS = [
     label: "Running",
     value: 12,
     theme: "green",
-    icon: <Activity className="size-3 text-emerald-400" />,
+    icon: <Activity className="size-4 text-emerald-400" />,
   },
   {
     label: "Uptime",
     value: "99.97%",
     theme: "blue",
-    icon: <Timer className="size-3 text-blue-400" />,
+    icon: <Timer className="size-4 text-blue-400" />,
   },
   {
     label: "Failed",
     value: 2,
     theme: "red",
-    icon: <AlertTriangle className="size-3 text-red-400" />,
+    icon: <AlertTriangle className="size-4 text-red-400" />,
   },
   {
     label: "Queue",
     value: "Low",
     theme: "purple",
-    icon: <ListChecks className="size-3 text-purple-400" />,
+    icon: <ListChecks className="size-4 text-purple-400" />,
   },
 ];
 

@@ -8,7 +8,7 @@ import VideoComponent from "./video-component";
 export const metadata = generatePageMetadata({
   title: "Authentication",
   description:
-    "Access your secure AlphaFusion Terminal account using your credentials. Enterprise-grade encryption ensures complete data protection for traders and institutions.",
+    "Securely access your Synapse workspace. Authenticate or create your credentials to begin building, automating, and deploying intelligent agent workflows with enterprise-grade protection.",
   image: "/og-auth.jpg",
   url: "/auth",
   schemaType: "WebPage",
@@ -18,7 +18,7 @@ const AuthLayout = async ({
   children,
 }: Readonly<{
   children: React.ReactNode;
-}>) => {  
+}>) => {
   return (
     <div className="grid min-h-svh grid-cols-1 lg:grid-cols-[38fr_62fr]">
       {/* LEFT: FORM */}
