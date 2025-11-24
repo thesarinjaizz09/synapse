@@ -49,7 +49,7 @@ type GlobalHeaderProps = {
         | { onNew?: never; newButtonHref?: never }
     );
 
-interface GlobalSearchProps {
+export interface GlobalSearchProps {
     value: string;
     onChange: (value: string) => void;
     placeholder: string;
