@@ -355,7 +355,7 @@ export const GlobalItem = ({
     return (
         <Link href={href} prefetch aria-disabled={isRemoving}>
             <Card className={cn("border cursor-pointer p-3 px-2 rounded-md",
-                isRemoving ? 'opacity-50 cursor-not-allowed' : '',
+                isRemoving ? 'opacity-50 cursor-not-allowed pointer-events-none' : '',
                 'transition-transform duration-200 hover:rounded-2xl hover:text-primary',
                 className)}>
                 <CardContent className="flex items-center justify-between p-0">
@@ -373,7 +373,9 @@ export const GlobalItem = ({
                         </div>
                     </div>
                     {
-                        !!actions && <div className="flex items-center gap-2">
+                        !!actions && <div className={cn("flex items-center gap-2",
+                            isRemoving ? 'pointer-events-none opacity-50 cursor-not-allowed' : '',
+                        )}>
                             {actions}
                         </div>
                     }

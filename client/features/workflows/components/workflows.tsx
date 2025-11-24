@@ -10,13 +10,25 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { generateSlug } from "random-word-slugs";
 import { GlobalContainer, GlobalEmptyView, GlobalErrorView, GlobalHeader, GlobalItem, GlobalList, GlobalLoadingView, GlobalPagination, GlobalSearch } from "@/components/globals/global-views"
-import { useCreateWorkflow, useDeleteWorkflow, useSuspenseWorkflows } from "../hooks/use-workflows"
+import { useCreateWorkflow, useDeleteWorkflow, useSuspenseWorkflows, useUpdateWorkflow } from "../hooks/use-workflows"
 import { toast } from "sonner";
 import { useWorkflowParams } from "../hooks/use-workflow-params";
 import { useGlobalSearch } from "../hooks/use-global-search";
 import type { Workflow } from '@/lib/generated/prisma/client';
-import { Ban, CirclePower, Radar, Radio, Shield, ShieldAlert, ShieldCheck, TrashIcon, WorkflowIcon } from 'lucide-react';
+import { Ban, Pause, PlayCircle, Timer, TrashIcon, WorkflowIcon } from 'lucide-react';
 import { Spinner } from '@/components/ui/spinner';
+import type { StatsProps } from '@/components/ui/stats';
+
+const themeClasses: Record<NonNullable<StatsProps["theme"]>, string> = {
+    green: "bg-emerald-500/10 border-emerald-500/20 text-emerald-400",
+    blue: "bg-blue-500/10 border-blue-500/20 text-blue-400",
+    red: "bg-red-500/10 border-red-500/20 text-red-400",
+    purple: "bg-purple-500/10 border-purple-500/20 text-purple-400",
+    ACTIVE: "bg-green-500/10 border-green-500/20 text-green-400",
+    INACTIVE: "bg-gray-500/10 border-gray-500/20 text-gray-400",
+    FAILED: "bg-red-500/10 border-red-500/20 text-red-400",
+    RUNNING: "bg-red-500/10 border-red-500/20 text-red-400",
+};
 
 export const WorkflowsTableTanstack = () => {
     const workflows = useSuspenseWorkflows()
@@ -205,7 +217,9 @@ export const WorkflowsEmpty = ({ disabled }: { disabled?: boolean }) => {
 }
 
 export const WorkflowsItem = ({ workflow }: { workflow: Workflow }) => {
+    const classes = themeClasses[workflow.status]
     const { mutateAsync: removeWorkflow, isPending } = useDeleteWorkflow()
+    const { mutateAsync: updateWorkflow, isPending: isUpdating } = useUpdateWorkflow()
 
     const handleRemoveWorkflow = (e: React.MouseEvent) => {
         e.preventDefault()
@@ -218,22 +232,50 @@ export const WorkflowsItem = ({ workflow }: { workflow: Workflow }) => {
         removeWorkflow({ id: workflow.id })
     }
 
-    const actions = <div className="border px-2 py-1.5 flex items-center gap-4 rounded-sm transition-transform duration-200 hover:rounded-lg hover:scale-102">
-        <button className='cursor-pointer'>
+    const handleUpdateWorkflow = (e: React.MouseEvent) => {
+        e.preventDefault()
+        e.stopPropagation()
+
+        if (isUpdating) {
+            return
+        }
+
+        updateWorkflow({ id: workflow.id, status: workflow.status === "ACTIVE" ? "INACTIVE" : "ACTIVE", name: workflow.name })
+    }
+
+    const actions = <div className="flex items-center justify-center gap-2">
+        <div className={`border px-2 py-1.5 flex items-center gap-1 rounded-sm transition-transform duration-200 hover:rounded-lg hover:scale-102 ${classes}`}>
+            <p className='text-[10.5px] tracking-wider'>
+                {workflow.status}
+            </p>
+        </div>
+
+        {
+            workflow.status === "ACTIVE" && <div className="border px-2 py-1.5 flex items-center gap-1 rounded-sm transition-transform duration-200 hover:rounded-lg hover:scale-102 bg-blue-500/10 border-blue-500/20 text-blue-400">
+                <Timer className="size-4" />
+                <p className='text-[11px] tracking-wider'>
+                    98.58%
+                </p>
+            </div>
+        }
+
+        <div className="border px-2 py-1.5 flex items-center gap-3 rounded-sm transition-transform duration-200 hover:rounded-lg hover:scale-102 bg-primary/10 border-primary/20">
             {
-                workflow.status === "FAILED" ? <Ban className="size-4 text-red-500" /> : <Ban className="size-4 text-green-500" />
+                workflow.status === "FAILED" && <button className='cursor-pointer'>
+                    <Ban className="size-4 text-red-500" />
+                </button>
             }
-        </button>
-        <button className="cursor-pointer">
-            <CirclePower className={
-                workflow.status === "ACTIVE" ? "size-4 text-green-500" : "size-4 text-white"
-            } />
-        </button>
-        <button onClick={handleRemoveWorkflow} disabled={isPending} className="cursor-pointer">
             {
-                isPending ? <Spinner className="size-4" /> : <TrashIcon className="size-4" />
+                workflow.status !== "ACTIVE" ? <button onClick={handleUpdateWorkflow} disabled={isUpdating} className='cursor-pointer'>
+                    {isUpdating ? <Spinner className="size-4" /> : <PlayCircle className="size-4" />}
+                </button> : <button onClick={handleUpdateWorkflow} disabled={isUpdating} className='cursor-pointer'>
+                    {isUpdating ? <Spinner className="size-4" /> : <Pause className="size-4 text-red-500" />}
+                </button>
             }
-        </button>
+            <button onClick={handleRemoveWorkflow} disabled={isPending} className="cursor-pointer">
+                {isPending ? <Spinner className="size-4" /> : <TrashIcon className="size-4" />}
+            </button>
+        </div>
     </div>
 
     return (
@@ -247,7 +289,7 @@ export const WorkflowsItem = ({ workflow }: { workflow: Workflow }) => {
             <div className="flex items-center justify-center border rounded-sm p-2">
                 <WorkflowIcon className='size-5 text-primary' />
             </div>
-        } isRemoving={isPending} actions={actions} />
+        } isRemoving={isPending || isUpdating} actions={actions} />
     )
 }
 

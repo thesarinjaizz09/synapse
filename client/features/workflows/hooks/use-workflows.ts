@@ -17,8 +17,8 @@ export const useCreateWorkflow = () => {
     return useMutation(
         trpc.workflows.create.mutationOptions({
             onSuccess: (data) => {
-                toast.success(data.message || "Workflow created successfully!")
                 queryClient.invalidateQueries(trpc.workflows.getAll.queryOptions({}))
+                toast.success(data.message || "Workflow created successfully!")
             },
             onError: (data) => {
                 toast.error(data.message || "Failed to create workflow...")
@@ -34,14 +34,34 @@ export const useDeleteWorkflow = () => {
     return useMutation(
         trpc.workflows.remove.mutationOptions({
             onSuccess: (data) => {
-                toast.success(data.message || "Workflow deleted successfully!")
                 queryClient.invalidateQueries(trpc.workflows.getAll.queryOptions({}))
                 queryClient.invalidateQueries(trpc.workflows.getOne.queryOptions({
                     id: data.workflow.id
                 }))
+                toast.success(data.message || "Workflow deleted successfully!")
             },
             onError: (data) => {
                 toast.error(data.message || "Failed to delete workflow...")
+            },
+        }),
+    )
+}
+
+export const useUpdateWorkflow = () => {
+    const trpc = useTRPC()
+    const queryClient = useQueryClient()
+
+    return useMutation(
+        trpc.workflows.update.mutationOptions({
+            onSuccess: (data) => {
+                queryClient.invalidateQueries(trpc.workflows.getAll.queryOptions({}))
+                queryClient.invalidateQueries(trpc.workflows.getOne.queryOptions({
+                    id: data.workflow.id
+                }))
+                toast.success(data.message || "Workflow updated successfully!")
+            },
+            onError: (data) => {
+                toast.error(data.message || "Failed to update workflow...")
             },
         }),
     )
