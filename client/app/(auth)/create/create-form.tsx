@@ -26,10 +26,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { CreateValues, CreateSchema } from "./validate";
 import { Spinner } from "@/components/ui/spinner";
 import { LayoutDashboard, Mail, Lock, SquareUser } from "lucide-react"
+import { useAuthSession } from "@/hooks/use-auth-session";
 
 export function CreateForm({ className }: React.ComponentProps<"form">) {
-  const [isPending, startTransition] = useTransition()
   const router = useRouter()
+  const [isPending, startTransition] = useTransition()
 
   const form = useForm<CreateValues>({
     resolver: zodResolver(CreateSchema),

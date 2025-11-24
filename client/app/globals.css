@@ -125,7 +125,7 @@
 
 
 
-/* CUSTOM STYLES */
+/* ------------CUSTOM STYLES------------ */
 
 @keyframes flow-down {
   0% {
@@ -165,4 +165,16 @@
 
 .animate-flow-signal {
   animation: flow-signal 1.2s ease-in-out infinite;
+}
+
+/* ----Top global loading bar---- */
+
+#nprogress .bar {
+  background: oklch(0.606 0.25 292.717) !important;
+  height: 2px !important;
+  border-radius: 50% !important;
+}
+
+#nprogress .peg {
+  box-shadow: 0 0 10px oklch(0.606 0.25 292.717), 0 0 5px oklch(0.606 0.25 292.717) !important;
 }

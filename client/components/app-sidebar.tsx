@@ -46,7 +46,7 @@ export function AppSidebar({ name, email }: AppSidebarProps) {
                   src={appLogo}
                   alt="AlphaFusion Corporation"
                   width={33}
-                  className="p-2 rounded-sm bg-muted border"
+                  className="p-2 border rounded-sm bg-muted"
                 />
                 <div className="grid flex-1 text-left leading-tight text-primary-foreground">
                   <span className="font-semibold truncate text-[14px] text-primary-foreground">

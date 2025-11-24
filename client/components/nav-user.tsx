@@ -26,19 +26,26 @@ export function NavUser({
 
   return (
     <>
-      {/* Logout Progress Dialog */}
       <Dialog open={loading}>
-        <DialogContent className="sm:max-w-md border border-border/50 shadow-lg" showCloseButton={false}>
-          <DialogHeader>
-            <DialogTitle className="text-lg font-semibold text-center flex items-center justify-start gap-x-2">
-              <Spinner />
-              Logging out
-            </DialogTitle>
-            <DialogDescription className="text-left text-muted-foreground">
-              Please wait while we securely end your session.
-            </DialogDescription>
-          </DialogHeader>
-        </DialogContent>
+        {loading && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center">
+            {/* BACKDROP */}
+            <div className="absolute inset-0 bg-black/10 backdrop-blur-xs" />
+
+            {/* MODAL CONTENT */}
+            <DialogContent className="sm:max-w-md border border-border shadow-xl" showCloseButton={false}>
+              <DialogHeader>
+                <DialogTitle className="text-lg font-semibold text-center flex items-center justify-start gap-x-2">
+                  <Spinner className="text-primary" />
+                  Logging out
+                </DialogTitle>
+                <DialogDescription className="text-left text-muted-foreground">
+                  Please wait while we securely end your session.
+                </DialogDescription>
+              </DialogHeader>
+            </DialogContent>
+          </div>
+        )}
       </Dialog >
 
       {/* Sidebar User Menu */}
@@ -48,7 +55,7 @@ export function NavUser({
             size="lg"
             className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground flex items-center justify-center shadow-inner border p-2 h-auto"
           >
-            <div className="border py-2 px-[4px] h-full rounded-sm bg-muted">
+            <div className="border py-2 px-[3.5px] h-full rounded-sm bg-muted">
               <User className="h-[15px]  " />
             </div>
             <div className="grid flex-1 text-left text-[13px] tracking-wide">
