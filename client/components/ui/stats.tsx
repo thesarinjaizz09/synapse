@@ -22,10 +22,10 @@ const Stats = ({ label, value, icon, theme = "green" }: StatsProps) => {
   const classes = themeClasses[theme];
 
   return (
-    <div className={`px-2 py-2 rounded-sm border ${classes} flex items-center justify-center gap-1`}>
-      {icon && <span className="size-4 items-center flex justify-center">{icon}</span>}
-      <span className="text-[12px] font-medium">{label} =</span>
-      <span className="text-[12px] text-white">{value}</span>
+    <div className={`px-2 py-1 rounded-sm border ${classes} flex items-center justify-center gap-1`}>
+      {icon && <span className="size-3 items-center flex justify-center tracking-wider">{icon}</span>}
+      <span className="text-[11px] font-medium tracking-wider">{label} =</span>
+      <span className="text-[11px] text-white tracking-wider">{value}</span>
     </div>
   );
 };
