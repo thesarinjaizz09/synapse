@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useMemo } from 'react'
+import { formatDistanceToNow } from 'date-fns'
 import {
     ColumnDef,
     flexRender,
@@ -251,9 +252,9 @@ export const WorkflowsItem = ({ workflow }: { workflow: Workflow }) => {
         </div>
 
         {
-            workflow.status === "ACTIVE" && <div className="border px-2 py-1.5 flex items-center gap-1 rounded-sm transition-transform duration-200 hover:rounded-lg hover:scale-102 bg-blue-500/10 border-blue-500/20 text-blue-400">
+            workflow.status === "ACTIVE" && <div className="border px-2 py-1.5 flex items-center justify-center gap-1 rounded-sm transition-transform duration-200 hover:rounded-lg hover:scale-102 bg-blue-500/10 border-blue-500/20 text-blue-400">
                 <Timer className="size-4" />
-                <p className='text-[11px] tracking-wider'>
+                <p className='text-[10.5px] tracking-wider'>
                     98.58%
                 </p>
             </div>
@@ -281,9 +282,8 @@ export const WorkflowsItem = ({ workflow }: { workflow: Workflow }) => {
     return (
         <GlobalItem href={`/workflows/${workflow.id}`} title={workflow.name} subtitle={
             <>
-                Updated TODO{" "}
-                &bull; Created{" "}
-                TODO
+                Updated {formatDistanceToNow(new Date(workflow.updatedAt), { addSuffix: true })}{" "}
+                &bull; Created{" "}{formatDistanceToNow(new Date(workflow.createdAt), { addSuffix: true })}
             </>
         } image={
             <div className="flex items-center justify-center border rounded-sm p-2">

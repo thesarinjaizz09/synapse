@@ -366,7 +366,7 @@ export const GlobalItem = ({
                                 {title}
                             </CardTitle>
                             {
-                                !!subtitle && <CardDescription className="text-[11px]">
+                                !!subtitle && <CardDescription className="text-[11.5px]">
                                     {subtitle}
                                 </CardDescription>
                             }
