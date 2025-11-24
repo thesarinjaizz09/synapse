@@ -26,12 +26,30 @@ import { AuthValues, AuthSchema } from "./validate";
 import { Mail, Lock, LayoutDashboard } from "lucide-react"
 import { signIn } from "@/lib/auth/client";
 import { Spinner } from "@/components/ui/spinner";
+import { useAuthSession } from "@/hooks/use-auth-session";
 
 export function AuthForm({
   className,
 }: React.ComponentProps<"form">) {
-  const [isPending, startTransition] = useTransition()
   const router = useRouter()
+  const [isPending, startTransition] = useTransition()
+  // const { session, isPending: isSessionPending } = useAuthSession()
+
+  // if (isSessionPending) {
+  //   return (
+  //     <div className="flex h-screen items-center justify-center">
+  //       <Spinner className="animate-spin w-6 h-6 text-muted-foreground" />
+  //       <span className="ml-2 text-sm text-muted-foreground">
+  //         Verifying session...
+  //       </span>
+  //     </div>
+  //   );
+  // }
+
+  // if (session) {
+  //   router.push(process.env.NEXT_PUBLIC_AUTH_SUCCESS_REDIRECT_URL || "/boards");
+  //   return null
+  // }
 
   const form = useForm<AuthValues>({
     resolver: zodResolver(AuthSchema),

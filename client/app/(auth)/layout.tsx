@@ -18,7 +18,7 @@ const AuthLayout = async ({
   children,
 }: Readonly<{
   children: React.ReactNode;
-}>) => {
+}>) => {  
   return (
     <div className="grid min-h-svh grid-cols-1 lg:grid-cols-[38fr_62fr]">
       {/* LEFT: FORM */}

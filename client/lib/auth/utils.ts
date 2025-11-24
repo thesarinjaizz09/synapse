@@ -21,6 +21,7 @@ export const isAuthenticated = async () => {
     }
 };
 
+
 export const isNotAuthenticated = async () => {
     try {
         const session = await auth.api.getSession({
@@ -36,3 +37,14 @@ export const isNotAuthenticated = async () => {
         console.error(error);
     }
 };
+
+export const getSession = async () => {
+    try {
+        const session = await auth.api.getSession({
+            headers: await headers()
+        });
+        return session;
+    } catch (error) {
+        console.error(error);
+    }
+}
