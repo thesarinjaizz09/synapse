@@ -9,7 +9,7 @@ import {
 } from '@tanstack/react-table'
 import { Badge } from '@/components/ui/badge';
 import { generateSlug } from "random-word-slugs";
-import { GlobalContainer, GlobalErrorView, GlobalHeader, GlobalLoadingView, GlobalPagination, GlobalSearch } from "@/components/globals/global-views"
+import { GlobalContainer, GlobalEmptyView, GlobalErrorView, GlobalHeader, GlobalLoadingView, GlobalPagination, GlobalSearch } from "@/components/globals/global-views"
 import { useCreateWorkflow, useSuspenseWorkflows } from "../hooks/use-workflows"
 import { toast } from "sonner";
 import { useWorkflowParams } from "../hooks/use-workflow-params";
@@ -116,10 +116,11 @@ export const WorkflowsTableTanstack = () => {
 export const WorkflowsTable = () => {
     const workflows = useSuspenseWorkflows()
 
+    if (workflows.data?.workflows.length === 0) return <WorkflowsEmpty />
 
     return (
         <div className='h-full max-h-screen overflow-y-auto border rounded-md'>
-            {workflows.isLoading ? <GlobalLoadingView /> : <p>
+            {workflows.isLoading ? <WorkflowsLoader /> : <p>
                 {JSON.stringify(workflows.data?.workflows, null, 2)}
             </p>}
         </div>
@@ -161,15 +162,38 @@ export const WorkflowsPagination = () => {
     )
 }
 
-export const WorkflowLoader = () => {
+export const WorkflowsLoader = () => {
     return (
         <GlobalLoadingView message='Fetching workflows...' />
     )
 }
 
-export const WorkflowError = () => {
+export const WorkflowsError = () => {
     return (
         <GlobalErrorView message='Error fetching workflows...' />
+    )
+}
+
+export const WorkflowsEmpty = ({ disabled }: { disabled?: boolean }) => {
+    const { params, setParams } = useWorkflowParams()
+    const { mutate: createWorkflow, isPending } = useCreateWorkflow()
+    
+    const handleCreateWorkflow = () => {
+        createWorkflow({ name: generateSlug() }, {
+            onSuccess: (data) => {
+                setParams({ ...params, page: 1, search: "" })
+            },
+            onError: (error) => {
+                toast.error(error.message || "Failed to create workflow...")
+            }
+        }
+        )
+    }
+
+    return (
+        <>
+            <GlobalEmptyView title='No Workflows Found!' message='No workflows found. Get started by creating a workflow...' newButtonLabel='Create Workflow' secondaryButtonLabel='Import Workflow' isCreating={isPending} disabled={disabled} onNew={handleCreateWorkflow} />
+        </>
     )
 }
 

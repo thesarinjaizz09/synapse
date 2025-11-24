@@ -1,19 +1,36 @@
-import { AlertCircleIcon, PlusIcon } from "lucide-react";
+import { AlertCircleIcon, ArrowUpRightIcon, ImportIcon, PackageOpenIcon, PlusIcon } from "lucide-react";
 import Link from "next/link";
 import { Spinner } from "../ui/spinner";
 import { cn } from "@/lib/utils";
 import { SearchForm } from "../search-form";
 import { Button } from "../ui/button";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
+import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "../ui/empty";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-interface StateViewProps {
+export interface StateViewProps {
     message?: string
 }
 
-interface HelperViewProps extends StateViewProps {
+export interface HelperViewProps extends StateViewProps {
     view?: string
 }
+
+export type GlobalEmptyProps = {
+    title: string;
+    description?: string;
+    newButtonLabel: string;
+    disabled?: boolean;
+    isCreating?: boolean;
+    onCreatingText?: string;
+    message?: string;
+    secondaryButtonLabel?: string;
+    onSecondaryCreatingText?: string;
+    isSecondaryCreating?: boolean;
+    onNew?: () => void;
+    onSecondaryNew?: () => void;
+    isSecondaryDisabled?: boolean
+};
 
 export type GlobalHeaderProps = {
     title: string;
@@ -21,6 +38,7 @@ export type GlobalHeaderProps = {
     newButtonLabel: string;
     disabled?: boolean;
     isCreating?: boolean;
+    onCreatingText?: string
 } & (
         | { onNew: () => void; newButtonHref?: never }
         | { newButtonHref: string; onNew?: never }
@@ -43,6 +61,8 @@ export interface GlobalPaginationProps {
 }
 
 
+
+
 export const GlobalHeader = ({
     title,
     description,
@@ -51,6 +71,7 @@ export const GlobalHeader = ({
     isCreating,
     onNew,
     newButtonHref,
+    onCreatingText
 }: GlobalHeaderProps) => {
     return (
         <header className="mb-8 flex items-center justify-between border-b border-gray-500 pb-5">
@@ -76,11 +97,11 @@ export const GlobalHeader = ({
                 ) : (
                     <button
                         onClick={onNew}
-                        className={cn(`inline-flex items-center px-3 py-2 border border-transparent text-xs font-medium rounded-sm shadow-sm text-white bg-primary hover:bg-secondary disabled:opacity-50 cursor-pointer`, disabled || isCreating ? 'cursor-not-allowed pointer-events-none opacity-50 bg-secondary' : '')}
+                        className={cn(`inline-flex items-center px-3 py-2 border border-transparent text-xs font-medium rounded-sm shadow-sm text-white bg-primary hover:bg-secondary hover:border-gray-700 disabled:opacity-50 cursor-pointer`, disabled || isCreating ? 'cursor-not-allowed pointer-events-none opacity-50 bg-secondary' : '')}
                         aria-disabled={disabled || isCreating}
                     >
                         {
-                            isCreating ? <><Spinner className="mr-2 " /> Creating Workflow...</> : <><PlusIcon className="mr-2 h-4 w-4" />{newButtonLabel}</>
+                            isCreating ? <><Spinner className="mr-2 " /> {onCreatingText || "Creating Workflow..."}</> : <><PlusIcon className="mr-2 h-4 w-4" />{newButtonLabel}</>
                         }
                     </button>
                 )
@@ -225,4 +246,54 @@ export const GlobalErrorView = ({
     )
 }
 
-
+export const GlobalEmptyView = ({
+    onNew,
+    message,
+    title,
+    disabled,
+    isCreating,
+    newButtonLabel,
+    onCreatingText,
+    secondaryButtonLabel,
+    onSecondaryCreatingText,
+    isSecondaryCreating,
+    isSecondaryDisabled = true
+}: GlobalEmptyProps) => {
+    return (
+        <Empty className="border">
+            <EmptyHeader>
+                <EmptyMedia variant="icon" className="rounded-sm">
+                    <PackageOpenIcon className="size-5" />
+                </EmptyMedia>
+                <EmptyTitle className="text-md">{title || "No Workflows Yet"}</EmptyTitle>
+                <EmptyDescription className="text-xs">
+                    {
+                        message || "You haven&apos;t created any workflows yet. Get started by creating your first workflow."
+                    }
+                </EmptyDescription>
+            </EmptyHeader>
+            <EmptyContent>
+                <div className="flex gap-2">
+                    <button
+                        onClick={onNew}
+                        className={cn(`inline-flex items-center px-3 py-2 border border-transparent text-xs font-medium rounded-sm shadow-sm text-white bg-primary hover:bg-secondary hover:border-gray-700 disabled:opacity-50 cursor-pointer`, disabled || isCreating ? 'cursor-not-allowed pointer-events-none opacity-50 bg-secondary' : '')}
+                        aria-disabled={disabled || isCreating}
+                    >
+                        {
+                            isCreating ? <><Spinner className="mr-2 " /> {onCreatingText || "Creating Workflow..."}</> : <><PlusIcon className="mr-2 h-4 w-4" />{newButtonLabel}</>
+                        }
+                    </button>
+                    <button
+                        onClick={onNew}
+                        className={cn(`inline-flex items-center px-3 py-2 border border-gray-700 text-xs font-medium rounded-sm shadow-sm text-white bg-muted hover:bg-background disabled:opacity-50 cursor-pointer`, isSecondaryDisabled || isSecondaryCreating ? 'cursor-not-allowed pointer-events-none opacity-50 bg-secondary' : '')}
+                        aria-disabled={isSecondaryDisabled || isSecondaryCreating}
+                    >
+                        {
+                            isSecondaryCreating ? <><Spinner className="mr-2 " /> {onSecondaryCreatingText || "Importing Workflow..."}</> : <><ImportIcon className="mr-2 h-4 w-4" />{secondaryButtonLabel}</>
+                        }
+                    </button>
+                </div>
+            </EmptyContent>
+        </Empty>
+    )
+}
