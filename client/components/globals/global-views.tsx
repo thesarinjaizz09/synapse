@@ -34,7 +34,13 @@ type GlobalEmptyProps = {
     isSecondaryCreating?: boolean;
     onNew?: () => void;
     onSecondaryNew?: () => void;
-    isSecondaryDisabled?: boolean
+    isSecondaryDisabled?: boolean,
+    dialog?: boolean;
+    dialogContent?: React.ReactNode,
+    open?: boolean,
+    showCloseButton?: boolean,
+    newButtonIcon?: React.ReactNode,
+    secondaryButtonIcon?: React.ReactNode
 };
 
 type GlobalHeaderProps = {
@@ -332,7 +338,13 @@ export const GlobalEmptyView = ({
     secondaryButtonLabel,
     onSecondaryCreatingText,
     isSecondaryCreating,
-    isSecondaryDisabled = true
+    isSecondaryDisabled = true,
+    dialog,
+    dialogContent,
+    open,
+    showCloseButton,
+    newButtonIcon,
+    secondaryButtonIcon
 }: GlobalEmptyProps) => {
     return (
         <Empty className="border h-[300px] max-h-[300px]">
@@ -349,27 +361,56 @@ export const GlobalEmptyView = ({
             </EmptyHeader>
             <EmptyContent>
                 <div className="flex gap-2">
-                    <button
-                        onClick={onNew}
-                        className={cn(`inline-flex items-center px-3 py-2 border border-transparent text-xs font-medium rounded-sm shadow-sm text-white bg-primary hover:bg-secondary hover:border-gray-700 hover:text-primary disabled:opacity-50 cursor-pointer`, disabled || isCreating ? 'cursor-not-allowed pointer-events-none opacity-50 bg-secondary' : '')}
-                        aria-disabled={disabled || isCreating}
-                    >
-                        {
-                            isCreating ? <><Spinner className="mr-2 " /> {onCreatingText || "Creating Workflow..."}</> : <><PlusIcon className="mr-2 h-4 w-4" />{newButtonLabel}</>
-                        }
-                    </button>
+                    {
+                        dialog ? <Dialog open={open}>
+                            <DialogTrigger asChild>
+                                <button
+                                    onClick={onNew}
+                                    className={cn(`inline-flex items-center px-3 py-2 border border-transparent text-xs font-medium rounded-sm shadow-sm text-white bg-primary hover:bg-secondary hover:border-gray-700 hover:text-primary disabled:opacity-50 cursor-pointer`, disabled || isCreating ? 'cursor-not-allowed pointer-events-none opacity-50 bg-secondary' : '')}
+                                    aria-disabled={disabled || isCreating}
+                                >
+                                    {
+                                        isCreating ? <><Spinner className="mr-2 " /> {onCreatingText || "Creating Workflow..."}</> : <>{
+                                            newButtonIcon ? newButtonIcon : <PlusIcon className="mr-2 h-4 w-4" />
+                                        }{newButtonLabel}</>
+                                    }
+                                </button>
+                            </DialogTrigger>
+
+                            {/* MODAL CONTENT */}
+                            <DialogContent className="sm:max-w-md border border-border shadow-xl" showCloseButton={showCloseButton}>
+                                {dialogContent}
+                            </DialogContent>
+                        </Dialog > : <button
+                            onClick={onNew}
+                            className={cn(`inline-flex items-center px-3 py-2 border border-transparent text-xs font-medium rounded-sm shadow-sm text-white bg-primary hover:bg-secondary hover:border-gray-700 hover:text-primary disabled:opacity-50 cursor-pointer`, disabled || isCreating ? 'cursor-not-allowed pointer-events-none opacity-50 bg-secondary' : '')}
+                            aria-disabled={disabled || isCreating}
+                        >
+                            {
+                                isCreating ? <><Spinner className="mr-2 " /> {onCreatingText || "Creating Workflow..."}</> : <>{
+                                    newButtonIcon ? newButtonIcon : <PlusIcon className="mr-2 h-4 w-4" />
+                                }{newButtonLabel}</>
+                            }
+                        </button>
+                    }
+
                     <button
                         onClick={onNew}
                         className={cn(`inline-flex items-center px-3 py-2 border border-gray-700 text-xs font-medium rounded-sm shadow-sm text-white bg-muted hover:bg-background disabled:opacity-50 cursor-pointer hover:text-primary`, isSecondaryDisabled || isSecondaryCreating ? 'cursor-not-allowed pointer-events-none opacity-50 bg-secondary' : '')}
                         aria-disabled={isSecondaryDisabled || isSecondaryCreating}
                     >
                         {
-                            isSecondaryCreating ? <><Spinner className="mr-2 " /> {onSecondaryCreatingText || "Importing Workflow..."}</> : <><ImportIcon className="mr-2 h-4 w-4" />{secondaryButtonLabel}</>
+                            isSecondaryCreating ? <><Spinner className="mr-2 " /> {onSecondaryCreatingText || "Importing Workflow..."}</> :
+
+                                isCreating ? <>< Spinner className="mr-2 " /> {onCreatingText || "Creating Workflow..."}</> : <>{
+                                    secondaryButtonIcon ? secondaryButtonIcon : <ImportIcon className="mr-2 h-4 w-4" />
+                                }{secondaryButtonLabel}</>
+
                         }
                     </button>
                 </div>
             </EmptyContent>
-        </Empty>
+        </Empty >
     )
 }
 
