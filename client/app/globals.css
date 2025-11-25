@@ -221,3 +221,26 @@
 .custom-scroll::-webkit-scrollbar-thumb:hover {
   background-color: #16223B;
 }
+
+/* React Flow Dark Mode */
+html.dark .react-flow__node {
+  background: #1e1e1e !important;
+  color: #ffffff !important;
+  border: 0.3px solid rgb(32, 29, 34) !important;
+  border-radius: 5px;
+}
+
+
+html.dark .react-flow__edge-path {
+  stroke: #aaa !important;
+}
+
+html.dark .react-flow__controls button {
+  background: #1e1e1e !important;
+  color: white !important;
+  border: 1px solid #555 !important;
+}
+
+html.dark .react-flow__minimap {
+  background: #222 !important;
+}

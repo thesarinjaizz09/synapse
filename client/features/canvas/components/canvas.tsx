@@ -1,5 +1,7 @@
 'use client'
-
+import { useState, useCallback } from 'react';
+import { ReactFlow, applyNodeChanges, applyEdgeChanges, addEdge, type Node, type Edge, type NodeChange, type EdgeChange, type Connection, Background, Controls } from '@xyflow/react';
+import '@xyflow/react/dist/style.css';
 import { GlobalContainer, GlobalErrorView, GlobalHeader, GlobalLoadingView } from "@/components/globals/global-views"
 import { Spinner } from "@/components/ui/spinner"
 import { themeClasses } from "@/components/ui/stats"
@@ -118,16 +120,6 @@ export const CanvasError = () => {
     )
 }
 
-export const CanvasEditor = ({ id }: { id: string }) => {
-    const { data, isLoading } = useSuspenseWorkflow(id)
-
-    if (isLoading) return <CanvasLoader />
-
-    return (
-        JSON.stringify(data, null, 2)
-    )
-}
-
 export const CanvasContainer = ({ children, id }: { children: React.ReactNode, id: string }) => {
     return (
         <GlobalContainer
@@ -135,5 +127,55 @@ export const CanvasContainer = ({ children, id }: { children: React.ReactNode, i
         >
             {children}
         </GlobalContainer>
+    )
+}
+
+
+// --------CANVAS EDITOR---------
+
+const initialNodes = [
+    { id: 'n1', position: { x: 0, y: 0 }, data: { label: 'Node 1' } },
+    { id: 'n2', position: { x: 0, y: 100 }, data: { label: 'Node 2' } },
+];
+const initialEdges = [{ id: 'n1-n2', source: 'n1', target: 'n2' }];
+
+export const CanvasEditor = ({ id }: { id: string }) => {
+    const { data, isLoading } = useSuspenseWorkflow(id)
+    if (isLoading) return <CanvasLoader />
+
+    const [nodes, setNodes] = useState<Node[]>(initialNodes);
+    const [edges, setEdges] = useState<Edge[]>(initialEdges);
+
+    const onNodesChange = useCallback(
+        (changes: NodeChange[]) => setNodes((nodesSnapshot) => applyNodeChanges(changes, nodesSnapshot)),
+        [],
+    );
+    const onEdgesChange = useCallback(
+        (changes: EdgeChange[]) => setEdges((edgesSnapshot) => applyEdgeChanges(changes, edgesSnapshot)),
+        [],
+    );
+    const onConnect = useCallback(
+        (params: Connection) => setEdges((edgesSnapshot) => addEdge(params, edgesSnapshot)),
+        [],
+    );
+
+
+    return (
+        <div className="size-full bg-muted rounded-md">
+            <ReactFlow
+                nodes={nodes}
+                edges={edges}
+                onNodesChange={onNodesChange}
+                onEdgesChange={onEdgesChange}
+                onConnect={onConnect}
+                fitView
+                proOptions={{
+                    hideAttribution: true
+                }}
+            >
+                <Background />
+                <Controls />
+        </ReactFlow>
+        </div >
     )
 }
