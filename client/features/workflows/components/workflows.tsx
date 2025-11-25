@@ -39,7 +39,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { CreateWorkflowSchema, CreateWorkflowValues } from '../schema';
 
 
-
 export const WorkflowsTableTanstack = () => {
     const workflows = useSuspenseWorkflows()
 
@@ -137,6 +136,7 @@ export const WorkflowsTableTanstack = () => {
         </div>
     )
 }
+
 export const WorkflowsTable = () => {
     const workflows = useSuspenseWorkflows()
 
@@ -357,23 +357,170 @@ export const WorkflowsError = () => {
 
 export const WorkflowsEmpty = ({ disabled }: { disabled?: boolean }) => {
     const { params, setParams } = useWorkflowParams()
-    const { mutate: createWorkflow, isPending } = useCreateWorkflow()
+    const [open, setOpen] = useState(false);
+    const { mutate: createWorkflow, isPending: isCreating } = useCreateWorkflow()
 
-    const handleCreateWorkflow = () => {
-        createWorkflow({ name: generateSlug() }, {
-            onSuccess: (data) => {
-                setParams({ ...params, page: 1, search: "" })
-            },
-            onError: (error) => {
-                toast.error(error.message || "Failed to create workflow...")
+    const form = useForm<CreateWorkflowValues>({
+        resolver: zodResolver(CreateWorkflowSchema),
+        defaultValues: {
+            name: "",
+            tags: "",
+        },
+    });
+
+    function onSubmit(data: CreateWorkflowValues) {
+        if (isCreating) return
+
+        try {
+            createWorkflow({ name: data.name }, {
+                onSuccess: (data) => {
+                    setOpen(false)
+                    form.reset()
+                },
+                onError: (error) => {
+                    toast.error(error.message || "Failed to create workflow...")
+                }
             }
+            )
+        } catch (error) {
+            toast.error("Internal client error");
         }
-        )
     }
+
+    const dialogContent = <>
+        <DialogHeader className='border-b pb-4'>
+            <DialogTitle className="text-lg font-semibold flex items-center gap-x-2">
+                <WorkflowIcon className="size-5 text-primary" />
+                New Workflow
+            </DialogTitle>
+            <DialogDescription className="text-muted-foreground">
+                Create a new automated workflow.
+            </DialogDescription>
+        </DialogHeader>
+
+        <Form {...form}>
+            <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="flex flex-col gap-6 mt-4"
+            >
+                <FieldGroup className='gap-3'>
+                    <FormField
+                        control={form.control}
+                        name="name"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormControl>
+                                    <div className="relative">
+                                        <FieldLabel htmlFor="name" className="mb-2">
+                                            <FolderOpen className="size-3.5 text-primary" /> Name
+                                        </FieldLabel>
+
+                                        <Input
+                                            id="name"
+                                            placeholder="customer-onboarding-automation"
+                                            disabled={isCreating}
+                                            {...field}
+                                            required
+                                            className="pr-10" // Add space for button
+                                        />
+
+                                        {/* Generate Slug Button */}
+                                        <button
+                                            type="button"
+                                            onClick={() => field.onChange(generateSlug())}
+                                            className="absolute right-2 top-9.5 text-muted-foreground hover:text-primary transition cursor-pointer"
+                                        >
+                                            <RefreshCw className="size-4" />
+                                        </button>
+                                    </div>
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
+                    <FormField
+                        control={form.control}
+                        name="tags"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormControl>
+                                    <div>
+                                        <FieldLabel htmlFor="tags" className="mb-2">
+                                            <Tag className="size-3.5 text-primary" /> Tags
+                                        </FieldLabel>
+                                        <Input
+                                            id="tags"
+                                            placeholder="automation, crm, leads"
+                                            disabled={isCreating}
+                                            {...field}
+                                        />
+                                        <p className="text-xs text-muted-foreground mt-1">
+                                            Enter comma-separated tags.
+                                        </p>
+                                    </div>
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
+                    {/* Project Select */}
+                    {/* <FormField
+                        control={form.control}
+                        name="projectId"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormControl>
+                                    <div>
+                                        <FieldLabel htmlFor="projectId" className="mb-2">
+                                            <Folder className="size-3.5 text-primary" /> Project
+                                        </FieldLabel>
+
+                                        <Select
+                                            value={field.value}
+                                            onValueChange={field.onChange}
+                                            disabled={isPending}
+                                        >
+                                            <SelectTrigger className="w-full">
+                                                <SelectValue placeholder="Select a project" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                {projects?.map((project) => (
+                                                    <SelectItem key={project.id} value={project.id}>
+                                                        {project.name}
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    /> */}
+                </FieldGroup>
+
+                <DialogFooter>
+                    <Button type="button" variant="secondary" disabled={isCreating} onClick={() => setOpen(false)}>
+                        Cancel
+                    </Button>
+                    <Button type="submit" disabled={isCreating} className="cursor-pointer">
+                        {isCreating ? (
+                            <Spinner />
+                        ) : (
+                            <WorkflowIcon className="size-3" />
+                        )}
+                        Create Workflow
+                    </Button>
+                </DialogFooter>
+            </form>
+        </Form>
+    </>
 
     return (
         <>
-            <GlobalEmptyView title='No Workflows Found!' message='No workflows found. Get started by creating a workflow...' newButtonLabel='Create Workflow' secondaryButtonLabel='Import Workflow' isCreating={isPending} disabled={disabled} onNew={handleCreateWorkflow} />
+            <GlobalEmptyView title='No Workflows Found!' message='No workflows found. Get started by creating a workflow...' newButtonLabel='Create Workflow' secondaryButtonLabel='Import Workflow' isCreating={isCreating} disabled={disabled} onNew={() => setOpen(true)} dialog={true} open={open} dialogContent={dialogContent} />
         </>
     )
 }
@@ -406,7 +553,7 @@ export const WorkflowsItem = ({ workflow }: { workflow: Workflow }) => {
 
     const actions = <div className="flex items-center justify-center gap-2">
         <div className={`border px-2 py-1.5 flex items-center gap-1 rounded-sm transition-transform duration-200 hover:rounded-lg hover:scale-102 ${themeClasses[workflow.status]}`}>
-            <p className={`text-[10.8px] tracking-wider`}>
+            <p className={`text-[11px] tracking-wider`}>
                 {workflow.status}
             </p>
         </div>

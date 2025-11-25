@@ -1,9 +1,11 @@
 import z from "zod";
 import prismaClient from "@/lib/db";
-import { WorkflowStatus } from "@/lib/generated/prisma/enums";
+import { WorkflowStatus, NodeType } from "@/lib/generated/prisma/enums";
 import { createTRPCRouter, protectedProcedure } from "@/trpc/init";
 import { TRPCError } from "@trpc/server";
 import { WORKFLOW_TABLE_PAGINATION } from "@/constants/config";
+import { generateSlug } from "random-word-slugs";
+import { Edge, Node } from "@xyflow/react";
 
 export const workflowsRouter = createTRPCRouter({
     create: protectedProcedure
@@ -12,10 +14,16 @@ export const workflowsRouter = createTRPCRouter({
             try {
                 const newWorkflow = await prismaClient.workflow.create({
                     data: {
-                        id: crypto.randomUUID(),
                         name: input.name,
                         status: WorkflowStatus.INACTIVE,
                         userId: ctx.session.user.id,
+                        nodes: {
+                            create: {
+                                type: NodeType.INITIAL,
+                                name: generateSlug(1),
+                                position: { x: 0, y: 0 },
+                            }
+                        }
                     },
                 });
 
@@ -96,25 +104,55 @@ export const workflowsRouter = createTRPCRouter({
     getOne: protectedProcedure
         .input(z.object({ id: z.string() }))
         .query(async ({ ctx, input }) => {
-            const workflow = await prismaClient.workflow.findUnique({
-                where: {
-                    id: input.id,
-                    userId: ctx.session.user.id,
-                },
-            });
+            try {
+                const workflow = await prismaClient.workflow.findUniqueOrThrow({
+                    where: {
+                        id: input.id,
+                        userId: ctx.session.user.id,
+                    },
+                    include: {
+                        nodes: true,
+                        connections: true
+                    }
+                });
 
-            if (!workflow) {
+                if (!workflow) {
+                    throw new TRPCError({
+                        code: "NOT_FOUND",
+                        message: "Workflow not found...",
+                    });
+                }
+
+                const nodes: Node[] = workflow.nodes.map((node) => ({
+                    id: node.id,
+                    type: node.type,
+                    name: node.name,
+                    position: node.position as { x: number, y: number },
+                    data: node.data as Record<string, unknown> || {}
+                }))
+
+                const edges: Edge[] = workflow.connections.map((connection) => ({
+                    id: connection.id,
+                    source: connection.fromNodeId,
+                    target: connection.toNodeId,
+                    sourceHandle: connection.fromOutput,
+                    targetHandle: connection.toInput
+                }))
+
+
+
+                return {
+                    workflow: { ...workflow, nodes, edges },
+                    success: true,
+                    message: "Workflow fetched successfully!",
+                };
+            } catch (error) {
                 throw new TRPCError({
-                    code: "NOT_FOUND",
-                    message: "Workflow not found",
+                    code: "INTERNAL_SERVER_ERROR",
+                    message: "Failed to fetch workflow...",
+                    cause: error,
                 });
             }
-
-            return {
-                workflow,
-                success: true,
-                message: "Workflow fetched successfully!",
-            };
         }),
 
     getAll: protectedProcedure
