@@ -6,9 +6,11 @@ import { themeClasses } from "@/components/ui/stats"
 import { useDeleteWorkflow, useSuspenseWorkflow, useUpdateWorkflow } from "@/features/workflows/hooks/use-workflows"
 import { formatDistanceToNow } from "date-fns"
 import { Ban, Clock, Cog, Pause, PlayCircle, Save, TrashIcon } from "lucide-react"
+import { useRouter } from "next/navigation"
 
 
 export const CanvasHeader = ({ disabled, id }: { disabled?: boolean, id: string }) => {
+    const router = useRouter()
     const { data, isLoading } = useSuspenseWorkflow(id)
     const { mutateAsync: removeWorkflow, isPending } = useDeleteWorkflow()
     const { mutateAsync: updateWorkflow, isPending: isUpdating } = useUpdateWorkflow()
@@ -17,18 +19,22 @@ export const CanvasHeader = ({ disabled, id }: { disabled?: boolean, id: string 
         e.preventDefault()
         e.stopPropagation()
 
-        if (isPending) {
+        if (isPending || isPending) {
             return
         }
 
-        removeWorkflow({ id: workflow.id })
+        removeWorkflow({ id: workflow.id }, {
+            onSuccess: () => {
+                router.push('/workflows')
+            }
+        })
     }
 
     const handleUpdateWorkflow = (e: React.MouseEvent) => {
         e.preventDefault()
         e.stopPropagation()
 
-        if (isUpdating) {
+        if (isUpdating || isPending) {
             return
         }
 
@@ -51,8 +57,8 @@ export const CanvasHeader = ({ disabled, id }: { disabled?: boolean, id: string 
             </p>
         </div>}
 
-        <div className="border px-2 py-1.5 flex items-center gap-3 rounded-sm bg-primary/10 border-primary/20">
-            <button onClick={() => {}} disabled={true} className="cursor-pointer">
+        <div className="border px-2 py-1.5 flex items-center gap-3 rounded-sm bg-primary/10 border-primary/20" aria-disabled={isLoading || isUpdating || isPending}>
+            <button onClick={() => { }} disabled={true} className="cursor-pointer">
                 {false ?
                     <Spinner className="size-4" /> :
                     <Save className="size-4" />}
@@ -62,12 +68,12 @@ export const CanvasHeader = ({ disabled, id }: { disabled?: boolean, id: string 
                     <Ban className="size-4 text-red-500" />
                 </button>}
             {workflow.status !== "ACTIVE" ?
-                <button onClick={handleUpdateWorkflow} disabled={isUpdating} className='cursor-pointer'>
+                <button onClick={handleUpdateWorkflow} disabled={isUpdating || isPending} className='cursor-pointer'>
                     {isUpdating ?
                         <Spinner className="size-4" /> :
                         <PlayCircle className="size-4" />}
                 </button> :
-                <button onClick={handleUpdateWorkflow} disabled={isUpdating} className='cursor-pointer'>
+                <button onClick={handleUpdateWorkflow} disabled={isUpdating || isPending} className='cursor-pointer'>
                     {isUpdating ?
                         <Spinner className="size-4" /> :
                         <Pause className="size-4 text-red-500" />}
@@ -80,7 +86,7 @@ export const CanvasHeader = ({ disabled, id }: { disabled?: boolean, id: string 
                     <Spinner className="size-4" /> :
                     <Cog className="size-4" />}
             </button>
-            <button onClick={handleRemoveWorkflow} disabled={isPending} className="cursor-pointer">
+            <button onClick={handleRemoveWorkflow} disabled={isPending || isUpdating} className="cursor-pointer">
                 {isPending ?
                     <Spinner className="size-4" /> :
                     <TrashIcon className="size-4" />}
