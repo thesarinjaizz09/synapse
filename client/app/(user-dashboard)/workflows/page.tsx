@@ -26,14 +26,14 @@ export default async function Page({ searchParams }: PageProps) {
   prefetchWorkflows(params)
 
   return (
-    <WorkflowsContainer>
-      <HydrateClient>
+    <HydrateClient>
+      <WorkflowsContainer>
         <ErrorBoundary fallback={<WorkflowsError />}>
           <Suspense fallback={<WorkflowsLoader />}>
             <WorkflowsTable />
           </Suspense>
         </ErrorBoundary>
-      </HydrateClient >
-    </WorkflowsContainer>
+      </WorkflowsContainer>
+    </HydrateClient >
   )
 }

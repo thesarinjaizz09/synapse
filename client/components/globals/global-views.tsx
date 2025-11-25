@@ -39,15 +39,19 @@ type GlobalEmptyProps = {
 
 type GlobalHeaderProps = {
     title: string;
-    description?: string;
-    newButtonLabel: string;
+    description?: string | React.ReactNode;
+    newButtonLabel?: string;
     disabled?: boolean;
     isCreating?: boolean;
     onCreatingText?: string;
     dialog?: boolean;
     dialogContent?: React.ReactNode,
     open?: boolean,
-    showCloseButton?: boolean
+    showCloseButton?: boolean,
+    newButtonIcon?: React.ReactNode,
+    showNewButton?: boolean,
+    actions?: React.ReactNode,
+    isFetching?: boolean
 } & (
         | { onNew: () => void; newButtonHref?: never }
         | { newButtonHref: string; onNew?: never }
@@ -90,7 +94,6 @@ interface GlobalItemProps {
 }
 
 
-
 // COMPONENTS
 export const GlobalHeader = ({
     title,
@@ -104,28 +107,45 @@ export const GlobalHeader = ({
     dialog = false,
     dialogContent,
     open,
-    showCloseButton = false
+    showCloseButton = false,
+    newButtonIcon,
+    showNewButton = true,
+    actions,
+    isFetching
 }: GlobalHeaderProps) => {
     return (
         <header className="mb-4 flex items-center justify-between border-b border-gray-500 pb-5">
             <div>
                 <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
-                    {title}
+                    {isFetching ?
+                        <span className="flex items-center justify-center gap-2">
+                            <Spinner />
+                            <span>Loading...</span>
+                        </span>
+                        : title}
                 </h2>
                 {description && (
                     <p className="text-[12.5px] text-muted-foreground dark:text-gray-400">
-                        {description}
+                        {isFetching ? <span className="flex items-center gap-2">
+                            <Spinner />
+                            <span>Loading...</span>
+                        </span> : description}
                     </p>
                 )}
             </div>
-            {newButtonLabel && (onNew || newButtonHref) && (
+            {isFetching ? <div className="flex items-center gap-2">
+                <Spinner />
+                <span>Loading...</span>
+            </div> : showNewButton ? newButtonLabel && (onNew || newButtonHref) && (
                 newButtonHref ? (
                     <Link
                         href={newButtonHref}
                         className={`inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50`}
                         aria-disabled={disabled || isCreating}
                     >
-                        {newButtonLabel}
+                        {
+                            newButtonIcon ? newButtonIcon : <PlusIcon className="mr-2 h-4 w-4" />
+                        }{newButtonLabel || "Action"}
                     </Link>
                 ) : (
                     dialog ?
@@ -137,7 +157,9 @@ export const GlobalHeader = ({
                                     aria-disabled={disabled || isCreating}
                                 >
                                     {
-                                        isCreating ? <><Spinner className="mr-2 " /> {onCreatingText || "Creating Workflow..."}</> : <><PlusIcon className="mr-2 h-4 w-4" />{newButtonLabel}</>
+                                        isCreating ? <><Spinner className="mr-2 " /> {onCreatingText || "Creating Workflow..."}</> : <>{
+                                            newButtonIcon ? newButtonIcon : <PlusIcon className="mr-2 h-4 w-4" />
+                                        }{newButtonLabel}</>
                                     }
                                 </button>
                             </DialogTrigger>
@@ -152,11 +174,13 @@ export const GlobalHeader = ({
                             aria-disabled={disabled || isCreating}
                         >
                             {
-                                isCreating ? <><Spinner className="mr-2 " /> {onCreatingText || "Creating Workflow..."}</> : <><PlusIcon className="mr-2 h-4 w-4" />{newButtonLabel}</>
+                                isCreating ? <><Spinner className="mr-2 " /> {onCreatingText || "Creating Workflow..."}</> : <>{
+                                    newButtonIcon ? newButtonIcon : <PlusIcon className="mr-2 h-4 w-4" />
+                                }{newButtonLabel}</>
                             }
                         </button>
                 )
-            )}
+            ) : actions}
         </header >
     )
 }
@@ -167,17 +191,17 @@ export const GlobalContainer = ({
     pagination,
     children,
 }: {
-    header: React.ReactNode;
-    search: React.ReactNode;
-    pagination: React.ReactNode;
-    children: React.ReactNode;
+    header?: React.ReactNode;
+    search?: React.ReactNode;
+    pagination?: React.ReactNode;
+    children?: React.ReactNode;
 }) => {
     return (
         <div className="flex flex-col gap-6 bg-red border w-full h-full max-w-screen max-h-screen p-7 overflow-y-auto">
-            {header}
-            {search}
-            {children}
-            {pagination}
+            {header && header}
+            {search && search}
+            {children && children}
+            {pagination && pagination}
         </div>
     )
 }

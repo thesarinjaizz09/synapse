@@ -127,6 +127,7 @@
 
 /* ------------CUSTOM STYLES------------ */
 
+
 @keyframes flow-down {
   0% {
     transform: translateY(0px);
@@ -179,8 +180,22 @@
   box-shadow: 0 0 10px oklch(0.606 0.25 292.717), 0 0 5px oklch(0.606 0.25 292.717) !important;
 }
 
-/* ----Custom scroll bar---- */
 
+/* ----Scrollbar removal---- */
+::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* ----Custom scroll bar---- */
 .custom-scroll {
   overflow-y: auto;
   overflow-x: hidden;

@@ -39,7 +39,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { CreateWorkflowSchema, CreateWorkflowValues } from '../schema';
 
 
-
 export const WorkflowsTableTanstack = () => {
     const workflows = useSuspenseWorkflows()
 
@@ -137,6 +136,7 @@ export const WorkflowsTableTanstack = () => {
         </div>
     )
 }
+
 export const WorkflowsTable = () => {
     const workflows = useSuspenseWorkflows()
 
@@ -406,7 +406,7 @@ export const WorkflowsItem = ({ workflow }: { workflow: Workflow }) => {
 
     const actions = <div className="flex items-center justify-center gap-2">
         <div className={`border px-2 py-1.5 flex items-center gap-1 rounded-sm transition-transform duration-200 hover:rounded-lg hover:scale-102 ${themeClasses[workflow.status]}`}>
-            <p className={`text-[10.5px] tracking-wider`}>
+            <p className={`text-[11px] tracking-wider`}>
                 {workflow.status}
             </p>
         </div>
