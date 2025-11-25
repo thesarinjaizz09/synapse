@@ -16,7 +16,7 @@ import { toast } from "sonner";
 import { useWorkflowParams } from "../hooks/use-workflow-params";
 import { useGlobalSearch } from "../hooks/use-global-search";
 import type { Workflow } from '@/lib/generated/prisma/client';
-import { Ban, Pause, PlayCircle, Clock, TrashIcon, WorkflowIcon, Cog, Tag, FolderOpen } from 'lucide-react';
+import { Ban, Pause, PlayCircle, Clock, TrashIcon, WorkflowIcon, Cog, Tag, FolderOpen, RefreshCw } from 'lucide-react';
 import { Spinner } from '@/components/ui/spinner';
 import { themeClasses } from '@/components/ui/stats';
 import { DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog"
@@ -34,7 +34,6 @@ import {
     FormItem,
     FormMessage,
 } from "@/components/ui/form";
-import { useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CreateWorkflowSchema, CreateWorkflowValues } from '../schema';
@@ -159,7 +158,6 @@ export const WorkflowsTable = () => {
 
 export const WorkflowsHeader = ({ disabled }: { disabled?: boolean }) => {
     const [open, setOpen] = useState(false);
-    const [isPending, startTransition] = useTransition()
     const { mutate: createWorkflow, isPending: isCreating } = useCreateWorkflow()
 
     const form = useForm<CreateWorkflowValues>({
@@ -171,28 +169,26 @@ export const WorkflowsHeader = ({ disabled }: { disabled?: boolean }) => {
     });
 
     function onSubmit(data: CreateWorkflowValues) {
-        if (isCreating || isPending) return
+        if (isCreating) return
 
         try {
-            startTransition(async () => {
-                createWorkflow({ name: data.name }, {
-                    onSuccess: (data) => {
-                        setOpen(false)
-                        form.reset()
-                    },
-                    onError: (error) => {
-                        toast.error(error.message || "Failed to create workflow...")
-                    }
+            createWorkflow({ name: data.name }, {
+                onSuccess: (data) => {
+                    setOpen(false)
+                    form.reset()
+                },
+                onError: (error) => {
+                    toast.error(error.message || "Failed to create workflow...")
                 }
-                )
-            });
+            }
+            )
         } catch (error) {
             toast.error("Internal client error");
         }
     }
 
     const dialogContent = <>
-        <DialogHeader>
+        <DialogHeader className='border-b pb-4'>
             <DialogTitle className="text-lg font-semibold flex items-center gap-x-2">
                 <WorkflowIcon className="size-5 text-primary" />
                 New Workflow
@@ -214,17 +210,28 @@ export const WorkflowsHeader = ({ disabled }: { disabled?: boolean }) => {
                         render={({ field }) => (
                             <FormItem>
                                 <FormControl>
-                                    <div>
+                                    <div className="relative">
                                         <FieldLabel htmlFor="name" className="mb-2">
                                             <FolderOpen className="size-3.5 text-primary" /> Name
                                         </FieldLabel>
+
                                         <Input
                                             id="name"
-                                            placeholder="Customer Onboarding Automation"
+                                            placeholder="customer-onboarding-automation"
                                             disabled={isCreating}
                                             {...field}
                                             required
+                                            className="pr-10" // Add space for button
                                         />
+
+                                        {/* Generate Slug Button */}
+                                        <button
+                                            type="button"
+                                            onClick={() => field.onChange(generateSlug())}
+                                            className="absolute right-2 top-9.5 text-muted-foreground hover:text-primary transition cursor-pointer"
+                                        >
+                                            <RefreshCw className="size-4" />
+                                        </button>
                                     </div>
                                 </FormControl>
                                 <FormMessage />
@@ -431,7 +438,7 @@ export const WorkflowsItem = ({ workflow }: { workflow: Workflow }) => {
                 e.preventDefault()
                 e.stopPropagation()
             }} disabled={true} className="cursor-pointer">
-                {isPending ?
+                {false ?
                     <Spinner className="size-4" /> :
                     <Cog className="size-4" />}
             </button>
