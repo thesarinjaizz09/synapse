@@ -296,7 +296,7 @@ export const GlobalLoadingView = ({
     message
 }: HelperViewProps) => {
     return (
-        <div className="flex items-center justify-center h-[300px] max-h-[300px] border rounded-md">
+        <div className="flex items-center justify-center h-full border rounded-md">
             <div className="flex flex-col items-center justify-center gap-2">
                 <Spinner className="text-primary size-5" />
                 {
@@ -314,7 +314,7 @@ export const GlobalErrorView = ({
     message
 }: HelperViewProps) => {
     return (
-        <div className="flex items-center justify-center h-[300px] max-h-[300px] border rounded-md">
+        <div className="flex items-center justify-center h-full border rounded-md">
             <div className="flex flex-col items-center justify-center gap-2">
                 <AlertCircleIcon className="text-primary size-5" />
                 {
@@ -347,7 +347,7 @@ export const GlobalEmptyView = ({
     secondaryButtonIcon
 }: GlobalEmptyProps) => {
     return (
-        <Empty className="border h-[300px] max-h-[300px]">
+        <Empty className="border h-full">
             <EmptyHeader>
                 <EmptyMedia variant="icon" className="rounded-sm">
                     <PackageOpenIcon className="size-5" />

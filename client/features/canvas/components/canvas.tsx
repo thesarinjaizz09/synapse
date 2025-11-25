@@ -118,6 +118,16 @@ export const CanvasError = () => {
     )
 }
 
+export const CanvasEditor = ({ id }: { id: string }) => {
+    const { data, isLoading } = useSuspenseWorkflow(id)
+
+    if (isLoading) return <CanvasLoader />
+
+    return (
+        JSON.stringify(data, null, 2)
+    )
+}
+
 export const CanvasContainer = ({ children, id }: { children: React.ReactNode, id: string }) => {
     return (
         <GlobalContainer

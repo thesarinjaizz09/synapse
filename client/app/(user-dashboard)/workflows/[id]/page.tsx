@@ -1,4 +1,4 @@
-import { CanvasContainer, CanvasError, CanvasLoader } from "@/features/canvas/components/canvas"
+import { CanvasContainer, CanvasEditor, CanvasError, CanvasLoader } from "@/features/canvas/components/canvas"
 import { prefetchWorkflow } from "@/features/workflows/server/prefetch"
 import { HydrateClient } from "@/trpc/server"
 import { Suspense } from "react"
@@ -18,7 +18,7 @@ const page = async ({ params }: PageProps) => {
       <CanvasContainer id={id}>
         <ErrorBoundary fallback={<CanvasError />}>
           <Suspense fallback={<CanvasLoader />}>
-            <div>Workflow Canvas : {id}</div>
+            <CanvasEditor id={id} />
           </Suspense>
         </ErrorBoundary>
       </CanvasContainer>
