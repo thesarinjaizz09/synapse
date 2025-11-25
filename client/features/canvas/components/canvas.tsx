@@ -9,6 +9,7 @@ import { useDeleteWorkflow, useSuspenseWorkflow, useUpdateWorkflow } from "@/fea
 import { formatDistanceToNow } from "date-fns"
 import { Ban, Clock, Cog, Pause, PlayCircle, Save, TrashIcon } from "lucide-react"
 import { useRouter } from "next/navigation"
+import { NODE_COMPONENTS } from '@/constants/node-components';
 
 
 export const CanvasHeader = ({ disabled, id }: { disabled?: boolean, id: string }) => {
@@ -163,6 +164,7 @@ export const CanvasEditor = ({ id }: { id: string }) => {
                 onNodesChange={onNodesChange}
                 onEdgesChange={onEdgesChange}
                 onConnect={onConnect}
+                nodeTypes={NODE_COMPONENTS}
                 fitView
                 proOptions={{
                     hideAttribution: true

@@ -7,9 +7,9 @@ import { PlaceholderNode } from "../react-flow/placeholder-node"
 
 export const InitialNode = memo((props: NodeProps) => {
     return (
-        <PlaceholderNode {...props}>
+        <PlaceholderNode {...props} >
             <div className="cursor-pointer flex items-center justify-center">
-                <PlusIcon className="size-4" />
+                <PlusIcon className="size-3 transition duration-200 hover:text-primary hover:scale-130" />
             </div>
         </PlaceholderNode>
     )
