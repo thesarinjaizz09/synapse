@@ -16,20 +16,9 @@ import { toast } from "sonner";
 import { useWorkflowParams } from "../hooks/use-workflow-params";
 import { useGlobalSearch } from "../hooks/use-global-search";
 import type { Workflow } from '@/lib/generated/prisma/client';
-import { Ban, Pause, PlayCircle, Timer, TrashIcon, WorkflowIcon } from 'lucide-react';
+import { Ban, Pause, PlayCircle, Clock, TrashIcon, WorkflowIcon, Cog } from 'lucide-react';
 import { Spinner } from '@/components/ui/spinner';
-import type { StatsProps } from '@/components/ui/stats';
-
-const themeClasses: Record<NonNullable<StatsProps["theme"]>, string> = {
-    green: "bg-emerald-500/10 border-emerald-500/20 text-emerald-400",
-    blue: "bg-blue-500/10 border-blue-500/20 text-blue-400",
-    red: "bg-red-500/10 border-red-500/20 text-red-400",
-    purple: "bg-purple-500/10 border-purple-500/20 text-purple-400",
-    ACTIVE: "bg-green-500/10 border-green-500/20 text-green-400",
-    INACTIVE: "bg-gray-500/10 border-gray-500/20 text-gray-400",
-    FAILED: "bg-red-500/10 border-red-500/20 text-red-400",
-    RUNNING: "bg-red-500/10 border-red-500/20 text-red-400",
-};
+import { themeClasses } from '@/components/ui/stats';
 
 export const WorkflowsTableTanstack = () => {
     const workflows = useSuspenseWorkflows()
@@ -157,6 +146,7 @@ export const WorkflowsHeader = ({ disabled }: { disabled?: boolean }) => {
         }
         )
     }
+    
     return (
         <>
             <GlobalHeader title="Workflows" description="Create and manage all the workflows you have access to..." onNew={handleCreateWorkflow} disabled={disabled} newButtonLabel="New Workflow" isCreating={isPending} />
@@ -218,7 +208,6 @@ export const WorkflowsEmpty = ({ disabled }: { disabled?: boolean }) => {
 }
 
 export const WorkflowsItem = ({ workflow }: { workflow: Workflow }) => {
-    const classes = themeClasses[workflow.status]
     const { mutateAsync: removeWorkflow, isPending } = useDeleteWorkflow()
     const { mutateAsync: updateWorkflow, isPending: isUpdating } = useUpdateWorkflow()
 
@@ -245,36 +234,47 @@ export const WorkflowsItem = ({ workflow }: { workflow: Workflow }) => {
     }
 
     const actions = <div className="flex items-center justify-center gap-2">
-        <div className={`border px-2 py-1.5 flex items-center gap-1 rounded-sm transition-transform duration-200 hover:rounded-lg hover:scale-102 ${classes}`}>
-            <p className='text-[10.5px] tracking-wider'>
+        <div className={`border px-2 py-1.5 flex items-center gap-1 rounded-sm transition-transform duration-200 hover:rounded-lg hover:scale-102 ${themeClasses[workflow.status]}`}>
+            <p className={`text-[10.5px] tracking-wider`}>
                 {workflow.status}
             </p>
         </div>
 
-        {
-            workflow.status === "ACTIVE" && <div className="border px-2 py-1.5 flex items-center justify-center gap-1 rounded-sm transition-transform duration-200 hover:rounded-lg hover:scale-102 bg-blue-500/10 border-blue-500/20 text-blue-400">
-                <Timer className="size-4" />
-                <p className='text-[10.5px] tracking-wider'>
-                    98.58%
-                </p>
-            </div>
-        }
+        {workflow.status === "ACTIVE" && <div className="border px-2 py-1.5 flex items-center justify-center rounded-sm transition-transform duration-200 hover:rounded-lg hover:scale-102 bg-blue-500/10 border-blue-500/20 text-blue-400 gap-2">
+            <Clock className="size-4" />
+            <p className='text-[10.5px] tracking-wider'>
+                98.58%
+            </p>
+        </div>}
 
         <div className="border px-2 py-1.5 flex items-center gap-3 rounded-sm transition-transform duration-200 hover:rounded-lg hover:scale-102 bg-primary/10 border-primary/20">
-            {
-                workflow.status === "FAILED" && <button className='cursor-pointer'>
+            {workflow.status === "FAILED" &&
+                <button className='cursor-pointer'>
                     <Ban className="size-4 text-red-500" />
-                </button>
-            }
-            {
-                workflow.status !== "ACTIVE" ? <button onClick={handleUpdateWorkflow} disabled={isUpdating} className='cursor-pointer'>
-                    {isUpdating ? <Spinner className="size-4" /> : <PlayCircle className="size-4" />}
-                </button> : <button onClick={handleUpdateWorkflow} disabled={isUpdating} className='cursor-pointer'>
-                    {isUpdating ? <Spinner className="size-4" /> : <Pause className="size-4 text-red-500" />}
-                </button>
-            }
+                </button>}
+            {workflow.status !== "ACTIVE" ?
+                <button onClick={handleUpdateWorkflow} disabled={isUpdating} className='cursor-pointer'>
+                    {isUpdating ?
+                        <Spinner className="size-4" /> :
+                        <PlayCircle className="size-4" />}
+                </button> :
+                <button onClick={handleUpdateWorkflow} disabled={isUpdating} className='cursor-pointer'>
+                    {isUpdating ?
+                        <Spinner className="size-4" /> :
+                        <Pause className="size-4 text-red-500" />}
+                </button>}
+            <button onClick={(e: React.MouseEvent) => {
+                e.preventDefault()
+                e.stopPropagation()
+            }} disabled={true} className="cursor-pointer">
+                {isPending ?
+                    <Spinner className="size-4" /> :
+                    <Cog className="size-4" />}
+            </button>
             <button onClick={handleRemoveWorkflow} disabled={isPending} className="cursor-pointer">
-                {isPending ? <Spinner className="size-4" /> : <TrashIcon className="size-4" />}
+                {isPending ?
+                    <Spinner className="size-4" /> :
+                    <TrashIcon className="size-4" />}
             </button>
         </div>
     </div>

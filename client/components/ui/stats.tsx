@@ -7,13 +7,13 @@ export interface StatsProps {
   theme?: "green" | "blue" | "red" | "purple" | "ACTIVE" | "INACTIVE" | "FAILED" | "RUNNING";
 }
 
-const themeClasses: Record<NonNullable<StatsProps["theme"]>, string> = {
+export const themeClasses: Record<NonNullable<StatsProps["theme"]>, string> = {
   green: "bg-emerald-500/10 border-emerald-500/20 text-emerald-400",
   blue: "bg-blue-500/10 border-blue-500/20 text-blue-400",
   red: "bg-red-500/10 border-red-500/20 text-red-400",
   purple: "bg-purple-500/10 border-purple-500/20 text-purple-400",
   ACTIVE: "bg-green-500/10 border-green-500/20 text-green-400",
-  INACTIVE: "bg-gray-500/10 border-gray-500/20 text-gray-400",
+  INACTIVE: "bg-zinc-500/10 border-zinc-500/20 text-zinc-400",
   FAILED: "bg-red-500/10 border-red-500/20 text-red-400",
   RUNNING: "bg-red-500/10 border-red-500/20 text-red-400",
 };
@@ -24,7 +24,8 @@ const Stats = ({ label, value, icon, theme = "green" }: StatsProps) => {
   return (
     <div className={`px-2 py-1 rounded-sm border ${classes} flex items-center justify-center gap-1`}>
       {icon && <span className="size-3 items-center flex justify-center tracking-wider">{icon}</span>}
-      <span className="text-[11px] font-medium tracking-wider">{label} =</span>
+      <span className="text-[11px] font-medium tracking-wider">{label}</span>
+      <span className="flex items-center justify-center text-[12px] font-medium tracking-wider">=</span>
       <span className="text-[11px] text-white tracking-wider">{value}</span>
     </div>
   );
