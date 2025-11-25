@@ -454,7 +454,7 @@ export const GlobalItem = ({
                     <div className="flex items-center gap-3">
                         {icon || image}
                         <div>
-                            <CardTitle className="text-[13px] tracking-wide font-semibold underline">
+                            <CardTitle className="text-[14px] tracking-wide font-semibold underline">
                                 {title}
                             </CardTitle>
                             {
