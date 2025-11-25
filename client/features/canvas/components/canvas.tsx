@@ -133,18 +133,13 @@ export const CanvasContainer = ({ children, id }: { children: React.ReactNode, i
 
 // --------CANVAS EDITOR---------
 
-const initialNodes = [
-    { id: 'n1', position: { x: 0, y: 0 }, data: { label: 'Node 1' } },
-    { id: 'n2', position: { x: 0, y: 100 }, data: { label: 'Node 2' } },
-];
-const initialEdges = [{ id: 'n1-n2', source: 'n1', target: 'n2' }];
-
 export const CanvasEditor = ({ id }: { id: string }) => {
     const { data, isLoading } = useSuspenseWorkflow(id)
+    const { workflow } = data
     if (isLoading) return <CanvasLoader />
 
-    const [nodes, setNodes] = useState<Node[]>(initialNodes);
-    const [edges, setEdges] = useState<Edge[]>(initialEdges);
+    const [nodes, setNodes] = useState<Node[]>(workflow.nodes);
+    const [edges, setEdges] = useState<Edge[]>(workflow.edges);
 
     const onNodesChange = useCallback(
         (changes: NodeChange[]) => setNodes((nodesSnapshot) => applyNodeChanges(changes, nodesSnapshot)),
@@ -175,7 +170,7 @@ export const CanvasEditor = ({ id }: { id: string }) => {
             >
                 <Background />
                 <Controls />
-        </ReactFlow>
+            </ReactFlow>
         </div >
     )
 }
