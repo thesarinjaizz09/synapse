@@ -54,10 +54,10 @@ export const useUpdateWorkflow = () => {
     return useMutation(
         trpc.workflows.update.mutationOptions({
             onSuccess: (data) => {
-                queryClient.invalidateQueries(trpc.workflows.getAll.queryOptions({}))
                 queryClient.invalidateQueries(trpc.workflows.getOne.queryOptions({
                     id: data.workflow.id
                 }))
+                queryClient.invalidateQueries(trpc.workflows.getAll.queryOptions({}))
                 toast.success(data.message || "Workflow updated successfully!")
             },
             onError: (data) => {

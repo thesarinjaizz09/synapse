@@ -1,3 +1,4 @@
+import React from "react";
 import { AlertCircleIcon, ArrowUpRightIcon, ImportIcon, PackageOpenIcon, PlusIcon, TrashIcon } from "lucide-react";
 import Link from "next/link";
 import { Spinner } from "../ui/spinner";
@@ -8,7 +9,7 @@ import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "../ui/empty";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Card, CardContent, CardDescription, CardTitle } from "../ui/card";
-import React from "react";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
 
 
 // TYPES
@@ -42,7 +43,11 @@ type GlobalHeaderProps = {
     newButtonLabel: string;
     disabled?: boolean;
     isCreating?: boolean;
-    onCreatingText?: string
+    onCreatingText?: string;
+    dialog?: boolean;
+    dialogContent?: React.ReactNode,
+    open?: boolean,
+    showCloseButton?: boolean
 } & (
         | { onNew: () => void; newButtonHref?: never }
         | { newButtonHref: string; onNew?: never }
@@ -95,7 +100,11 @@ export const GlobalHeader = ({
     isCreating,
     onNew,
     newButtonHref,
-    onCreatingText
+    onCreatingText,
+    dialog = false,
+    dialogContent,
+    open,
+    showCloseButton = false
 }: GlobalHeaderProps) => {
     return (
         <header className="mb-4 flex items-center justify-between border-b border-gray-500 pb-5">
@@ -119,15 +128,33 @@ export const GlobalHeader = ({
                         {newButtonLabel}
                     </Link>
                 ) : (
-                    <button
-                        onClick={onNew}
-                        className={cn(`inline-flex items-center px-3 py-2 border border-transparent text-xs font-medium rounded-sm shadow-sm text-white bg-primary hover:bg-secondary hover:border-gray-700 hover:text-primary disabled:opacity-50 cursor-pointer`, disabled || isCreating ? 'cursor-not-allowed pointer-events-none opacity-50 bg-secondary' : '')}
-                        aria-disabled={disabled || isCreating}
-                    >
-                        {
-                            isCreating ? <><Spinner className="mr-2 " /> {onCreatingText || "Creating Workflow..."}</> : <><PlusIcon className="mr-2 h-4 w-4" />{newButtonLabel}</>
-                        }
-                    </button>
+                    dialog ?
+                        <Dialog open={open}>
+                            <DialogTrigger asChild>
+                                <button
+                                    onClick={onNew}
+                                    className={cn(`inline-flex items-center px-3 py-2 border border-transparent text-xs font-medium rounded-sm shadow-sm text-white bg-primary hover:bg-secondary hover:border-gray-700 hover:text-primary disabled:opacity-50 cursor-pointer`, disabled || isCreating ? 'cursor-not-allowed pointer-events-none opacity-50 bg-secondary' : '')}
+                                    aria-disabled={disabled || isCreating}
+                                >
+                                    {
+                                        isCreating ? <><Spinner className="mr-2 " /> {onCreatingText || "Creating Workflow..."}</> : <><PlusIcon className="mr-2 h-4 w-4" />{newButtonLabel}</>
+                                    }
+                                </button>
+                            </DialogTrigger>
+
+                            {/* MODAL CONTENT */}
+                            <DialogContent className="sm:max-w-md border border-border shadow-xl" showCloseButton={showCloseButton}>
+                                {dialogContent}
+                            </DialogContent>
+                        </Dialog > : <button
+                            onClick={onNew}
+                            className={cn(`inline-flex items-center px-3 py-2 border border-transparent text-xs font-medium rounded-sm shadow-sm text-white bg-primary hover:bg-secondary hover:border-gray-700 hover:text-primary disabled:opacity-50 cursor-pointer`, disabled || isCreating ? 'cursor-not-allowed pointer-events-none opacity-50 bg-secondary' : '')}
+                            aria-disabled={disabled || isCreating}
+                        >
+                            {
+                                isCreating ? <><Spinner className="mr-2 " /> {onCreatingText || "Creating Workflow..."}</> : <><PlusIcon className="mr-2 h-4 w-4" />{newButtonLabel}</>
+                            }
+                        </button>
                 )
             )}
         </header >
