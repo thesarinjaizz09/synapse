@@ -1,9 +1,11 @@
 import z from "zod";
 import prismaClient from "@/lib/db";
-import { WorkflowStatus } from "@/lib/generated/prisma/enums";
+import { WorkflowStatus, NodeType } from "@/lib/generated/prisma/enums";
 import { createTRPCRouter, protectedProcedure } from "@/trpc/init";
 import { TRPCError } from "@trpc/server";
 import { WORKFLOW_TABLE_PAGINATION } from "@/constants/config";
+import { generateSlug } from "random-word-slugs";
+import { NodeCreateWithoutWorkflowInput } from "@/lib/generated/prisma/models";
 
 export const workflowsRouter = createTRPCRouter({
     create: protectedProcedure
@@ -12,10 +14,16 @@ export const workflowsRouter = createTRPCRouter({
             try {
                 const newWorkflow = await prismaClient.workflow.create({
                     data: {
-                        id: crypto.randomUUID(),
                         name: input.name,
                         status: WorkflowStatus.INACTIVE,
                         userId: ctx.session.user.id,
+                        nodes: {
+                            create: {
+                                type: NodeType.INITIAL,
+                                name: generateSlug(1),
+                                position: { x: 0, y: 0 },
+                            }
+                        }
                     },
                 });
 
