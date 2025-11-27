@@ -10,6 +10,7 @@ import { formatDistanceToNow } from "date-fns"
 import { Ban, Clock, Cog, Pause, PlayCircle, Save, TrashIcon } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { NODE_COMPONENTS } from '@/constants/node-components';
+import { GlobalButton } from '@/components/globals/global-components';
 
 
 export const CanvasHeader = ({ disabled, id }: { disabled?: boolean, id: string }) => {
@@ -61,39 +62,45 @@ export const CanvasHeader = ({ disabled, id }: { disabled?: boolean, id: string 
         </div>}
 
         <div className="border px-2 py-1.5 flex items-center gap-3 rounded-sm bg-primary/10 border-primary/20" aria-disabled={isLoading || isUpdating || isPending}>
-            <button onClick={() => { }} disabled={true} className="cursor-pointer">
-                {false ?
-                    <Spinner className="size-4" /> :
-                    <Save className="size-4" />}
-            </button>
-            {workflow.status === "FAILED" &&
-                <button className='cursor-pointer'>
+            <GlobalButton onClick={() => { }} disabled={true} className="cursor-pointer">
+                {
+                    false ?
+                        <Spinner className="size-4" /> :
+                        <Save className="size-4" />
+                }
+            </GlobalButton>
+            {
+                workflow.status === "FAILED" &&
+                <GlobalButton className='cursor-pointer'>
                     <Ban className="size-4 text-red-500" />
-                </button>}
-            {workflow.status !== "ACTIVE" ?
-                <button onClick={handleUpdateWorkflow} disabled={isUpdating || isPending} className='cursor-pointer'>
-                    {isUpdating ?
-                        <Spinner className="size-4" /> :
-                        <PlayCircle className="size-4" />}
-                </button> :
-                <button onClick={handleUpdateWorkflow} disabled={isUpdating || isPending} className='cursor-pointer'>
-                    {isUpdating ?
-                        <Spinner className="size-4" /> :
-                        <Pause className="size-4 text-red-500" />}
-                </button>}
-            <button onClick={(e: React.MouseEvent) => {
+                </GlobalButton>
+            }
+            {
+                workflow.status !== "ACTIVE" ?
+                    <GlobalButton onClick={handleUpdateWorkflow} disabled={isUpdating || isPending} className='cursor-pointer'>
+                        {isUpdating ?
+                            <Spinner className="size-4" /> :
+                            <PlayCircle className="size-4 text-green-500 hover:scale-120 hover:text-primary/80" />}
+                    </GlobalButton> :
+                    <GlobalButton onClick={handleUpdateWorkflow} disabled={isUpdating || isPending} className='cursor-pointer'>
+                        {isUpdating ?
+                            <Spinner className="size-4" /> :
+                            <Pause className="size-4 text-red-500 hover:scale-120 hover:text-primary/80" />}
+                    </GlobalButton>
+            }
+            <GlobalButton onClick={(e: React.MouseEvent) => {
                 e.preventDefault()
                 e.stopPropagation()
             }} disabled={true} className="cursor-pointer">
                 {false ?
                     <Spinner className="size-4" /> :
-                    <Cog className="size-4" />}
-            </button>
-            <button onClick={handleRemoveWorkflow} disabled={isPending || isUpdating} className="cursor-pointer">
+                    <Cog className="size-4 " />}
+            </GlobalButton>
+            <GlobalButton onClick={handleRemoveWorkflow} disabled={isPending || isUpdating} className="cursor-pointer">
                 {isPending ?
                     <Spinner className="size-4" /> :
-                    <TrashIcon className="size-4" />}
-            </button>
+                    <TrashIcon className="size-4 text-red-500 hover:scale-120 hover:text-primary/80" />}
+            </GlobalButton>
         </div>
     </div>
 
