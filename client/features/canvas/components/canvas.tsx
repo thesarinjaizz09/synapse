@@ -15,7 +15,10 @@ import { GlobalButton } from '@/components/globals/global-components';
 
 export const CanvasHeader = ({ disabled, id }: { disabled?: boolean, id: string }) => {
     const router = useRouter()
+
     const { data, isLoading } = useSuspenseWorkflow(id)
+    const { workflow } = data
+
     const { mutateAsync: removeWorkflow, isPending } = useDeleteWorkflow()
     const { mutateAsync: updateWorkflow, isPending: isUpdating } = useUpdateWorkflow()
 
@@ -45,7 +48,6 @@ export const CanvasHeader = ({ disabled, id }: { disabled?: boolean, id: string 
         updateWorkflow({ id: workflow.id, status: workflow.status === "ACTIVE" ? "INACTIVE" : "ACTIVE", name: workflow.name })
     }
 
-    const { workflow } = data
 
     const actions = <div className="flex items-center justify-center gap-2">
         <div className={`border px-2 py-1.5 flex items-center gap-1 rounded-sm ${themeClasses[workflow.status]}`}>

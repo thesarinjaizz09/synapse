@@ -342,7 +342,7 @@ export const GlobalEmptyView = ({
     dialog,
     dialogContent,
     open,
-    showCloseButton,
+    showCloseButton = false,
     newButtonIcon,
     secondaryButtonIcon
 }: GlobalEmptyProps) => {
@@ -402,7 +402,7 @@ export const GlobalEmptyView = ({
                         {
                             isSecondaryCreating ? <><Spinner className="mr-2 " /> {onSecondaryCreatingText || "Importing Workflow..."}</> :
 
-                                isCreating ? <>< Spinner className="mr-2 " /> {onCreatingText || "Creating Workflow..."}</> : <>{
+                                isSecondaryCreating ? <>< Spinner className="mr-2 " /> {onSecondaryCreatingText || "Creating Workflow..."}</> : <>{
                                     secondaryButtonIcon ? secondaryButtonIcon : <ImportIcon className="mr-2 h-4 w-4" />
                                 }{secondaryButtonLabel}</>
 
